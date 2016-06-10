@@ -1,0 +1,325 @@
+---
+title: "Bunching estimation with `bunchr`"
+author: "Itai Trilnick"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Bunching estimation with bunchr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r settings, include=FALSE, echo=FALSE}
+#devtools::load_all()
+knitr::opts_chunk$set( fig.width = 7, fig.height = 4,
+                      warning = TRUE,
+                      error = TRUE )
+```
+
+A growing literature in empirical economics is focused around bunching. Loosely
+speaking, bunching occurs when many people self select to a very specific location
+in the range of some variable. When this happens, a histogram of this variable might
+show a visible "bunch" - a large mass that would not be otherwise predicted by the
+surrounding bins. In words of people smarter than me:
+
+  > "This approach uses bunching around points that feature
+discontinuities in incentives to elicit behavioral responses and estimate
+structural parameters." ^[Kleven, H J (2016). _"Bunching"_, Annual Review of
+                          Economics, 8(1).]
+
+With the increasing use of administrative data, bunching has been mostly used
+in the public and labor economics. Two main types of bunch-inducing setting are
+explored. First, where budget sets suddenly change slopes, creating a point where
+budget sets are non-differentiable. These "kinks" in budget sets have been explored
+in the case of Earned Income Tax Credits in the US^[Saez, E. (2010). _"Do taxpayers
+bunch at kink points?"_] and income tax rates in Denmark^[Chetty, R., Friedman, J.,
+Olsen, T., Pistaferri, L. (2009). _"Adjustment Costs, Firm Responses, and Micro
+vs. Macro Labor Supply Elasticities: Evidence from Danish Tax Records"_,
+Quarterly Journal of Economics, 126(2).]. The second type are notches, where
+a policy sets a discontinuity in the budget set. For example, bunching in earnings
+of individuals is observed in Pakistan, where the _average_ tax rates, rather than
+the marginal ones, change when earnings cross thresholds^[Kleven, H.J., Waseem,
+M., _"Using notches to uncover optimization frictions and structural elasticities:
+Theory and evidence from Pakistan"_, The Quarterly Journal of Economics, 128(2)].
+This creates a drop in the budget line of individuals, as _all_ earnings are subject
+to a higher tax rate once earnings exceed the threshold.
+
+## What can you do with `bunchr`?
+
+The `bunchr` package can be used to visualize bunching and estimate the elasticity
+of earnings w.r.t. marginal tax rates, as usually done in the literature cited
+above. There is also a function to simulate earnings given certain parameters.
+`bunchr`'s language is of earnings and elasticities of earnings, but can be used
+for other suitable bunching analysis.
+
+Remember that, as usual, more observations are better. Bunching analysis involves
+the creation of a histogram, similar to a density curve. The narrower the bins
+of this histogram, the better. Wider bins could bias elasticity estimates. For
+a kink analysis, the elasticity formula takes into account the extra bunching
+over the width of the excluded area. Setting bins too wide could attenuate the
+estimates. For notches, the procedure involves finding the "end" of the notch,
+where the discontinuity in incentives is no longer relevant. This limit, referred
+to as _delta\_zed_ in the code, is determined in number of bins after the bunching
+bin. Setting bins too wide limits the set of potential _delta\_zed_, which might
+bias the estimates.
+
+Having more observations, one can use narrower bins and still avoid a "jumpy"
+looking histogram. It is better to have a smoother looking histogram, as the
+counter-factual histogram for the area of kink or notch is made by interpolation
+from the area outside of the notch. Smoother histograms make more reliable
+counter-factuals. As a robustness check for any analysis, I recommend comparing
+the results of analysis with varying bin widths.
+
+
+## Pre-analysis: Viewing a distribution
+
+All you need is a vector of earnings. Using `bunch_viewer`, you can see how a
+histogram of your data looks like. Additionally, you can see where you could
+potentially set some of the parameters for analysis.
+
+Let's create an earning distribution for a kinked budget set. First, I create a
+vector of latent abilities, with 100,000 values. Then, I simulate the earnings
+for a situation where everyone's elasticity of earnings w.r.t. marginal tax rate
+is 0.2 (_elas_ = 0.2). The simulation takes into account a kink at earning point of 1000
+(_zstar_ = 1000), at which the marginal tax rate increases from 0% to 10%
+(_t1_ = 0, _t2_ = 0.1), the notch height is zero (_Tax_ = 0). After creating the
+earning vector, we can view it with `bunch_viewer`.
+
+As a preparation for further analysis, I can specify where the counter-factual
+distribution be calculates (setting _cf_start_ and _cf_end_), and where the bunching
+is (_exclude_before_ and _exclude_after_) relative to the place of the notch. Note
+that these are stated in number of bins. The wider the bins, the greater the
+distances from the kink! That's where `bunch_viewer` comes handy.
+
+In this case, one can observe the whole bunching bin and the rest of the
+distribution quite well. In other cases, specially notches (where bunching is
+more substantial), the height of the bunching bin can be so high that, in order
+to include it in the graph, the rest of the distribution can hardly be seen.
+In these cases, I would keep the default option of "trimming" the vertical axis
+by keeping the default options and not specifying _trimy_ = F.
+
+```{r ability_chunk}
+set.seed(42)
+ability_vec <- 4000 * rbeta(100000, 2, 5)
+earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0, 0.1, 0, 1000)
+bunch_viewer(earning_vec, 1000, 10,10,2,2, binw = 50, trimy=F)
+```
+
+## Analyzing a kink
+
+We viewed the distribution. Now we want to get an estimate for the elasticity
+of earnings. We can use the same specification as we did while viewing. Note that,
+in order to calculate the elasticity, we must provide the marginal tax rates!
+
+```{r first_kink}
+kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                   cf_start = 10, cf_end = 10,
+                   exclude_before = 2, exclude_after = 2, binw = 50)
+kink_est$e
+```
+Note: we modeled the earnings with elasticity of 0.2, but got an estimate of 0.16.
+This might be the result of the width of the bins, the width of the excluded area
+around the kink, or both. Let's try this with narrower bins. Note, I have to adjust
+the other parameters. However, I'll keep the excluded area at the same width.
+
+```{r kink_narrower}
+kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                   cf_start = 50, cf_end = 50,
+                   exclude_before = 10, exclude_after = 10, binw = 10)
+kink_est$e
+```
+
+That didn't do much to the elasticity parameter, but we have narrower bins. Now,
+we narrow the excluded area around the kink point. In fact, since I generated a
+"clean" simulation, I can narrow the excluded area to the bunching bin itself,
+setting _exclude_before_ and _exclude_after_ to zero. For the demonstrative
+purpose of this exercise, I'll keep the excluded area to one bin before and one
+bin after the kink bin. I'll also bootstrap the results to get a sense of the
+potential distribution of elasticity parameters. Bootstrapping is done by
+resampling the population vector and running the analysis.
+
+```{r kink_boot1}
+kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                   cf_start = 50, cf_end = 50,
+                   exclude_before = 1, exclude_after = 1, binw = 10,
+                   nboots = 100, seed = 123)
+kink_est$results$e
+quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+```
+
+These results are much closer to the original. Just for the purpose of demonstration,
+let's run the analysis with the kink bin only as excluded area. I do not include the plotp lot this time.
+```{r kink_boot0}
+kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                   cf_start = 50, cf_end = 50,
+                   exclude_before = 0, exclude_after = 0, binw = 10,
+                   nboots = 100, seed = 123, draw = F)
+kink_est$results$e
+quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+```
+
+## Analyzing a notch
+
+First, let's create an earning distribution with a notch. This time, I will use
+`bunch_viewer` without trimming the vertical axis. Now, the excluded area is where
+the notch seems to be taking place. I want to make sure I have enough area inside
+the red lines (where counter-factual is calculated) and outside the green lines
+(the excluded area). Of course, in this particular case we could just set the red
+lines at both ends of the histogram. In other cases, however, we might want to
+limit the analysis area (e.g. there are other notches or kinks).
+
+It's best to set the cf_end variable so it lays to the right of what seems to be
+the end of the effect of the notch, but not too much to the right. The function
+uses the area between the red and green lines to calculate an initial counter-factual
+distribution, so you want to make it easy by having quite a few bins there. I
+would refrain from including areas with idiosyncratic density patterns in the
+counter-factual area, as it might make the interpolation harder and less accurate.
+
+Basically, what we need to calculate the elasticity is the size of the notch,
+or $\Delta z^*$. While this is clear in this case, where elasticity is heterogeneous
+it might not be so clear cut. The process goes like this: a counter-factual histogram
+is created. Then, the extra bunching (sum differences between the actual and counter-
+factual histograms from the beginning of the excluded area to the notch point) is
+calculated. That bunching comes from the right side of the histogram. Running on
+the bins to the right of the notch bin, the differences between the counter-factual
+and real histogram are added to the initial bunching sum (they should be negative).
+When the sum hits zero, the process stops and the current bin is declared the end
+of the notch. $\Delta z^*$ is the distance from the center of that bin to the notch
+point.
+
+Notch analysis takes a little longer, mainly because of an iterative process in
+searching for the end of the notch.
+
+```{r notch1}
+earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.1, 200, 1000)
+bunch_viewer(earning_vec, 1000, 20, 50, 2, 25, binw = 20)
+notch_est <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
+                   cf_start = 50, cf_end = 50,
+                   exclude_before = 2, exclude_after = 25, binw = 20,
+                   nboots = 100, seed = 123)
+notch_est$results$e
+quantile(notch_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+```
+
+The example above is a good one: _delta\_zed seems to be the actual end of the
+notch. Sometimes, the output plot will show $\Delta z^*$ not concurring with
+what visibly seems like the end of the notch. In that case, it might be
+useful to change with the exclude_after parameter and see if the plot come out
+better.
+
+Another issue is the counter-factual distribution. For larger notches, the
+inetrpolation is harder. Remember the interpolation is based on the histogram
+bins outside the excluded area (green lines) but inside the analysis area (red).
+If the counter-factual distribution in the output plot does not seem convincing,
+a few measures can be taken:
+
+* Widen the counter-factual analysis area (red lines).
+* Change the order of polynomial used to construct the counter-factual.
+* Change the option of model selection for counter-factual.
+
+As for the distribution of bootstrapped estimates, note that it might be
+less "smooth" than in the kink analysis. Recall that the major change in the
+different runs is the estimated number of bins forming delta_zed. As these are
+integers, the distribution of estimates will not be very smooth. With narrower
+bins, there should be more potential values for the elasticity estimates.
+
+## The Importance of Sample Size
+
+How meaningful is a having a large sample size? This demonstration shows some of
+the effects of sample size on kink estimations. First, I'll use a small earning
+vector: 10,000 observations in total. The confidence interval is quite large.
+
+```{r size_small }
+ability_vec_small <- 4000 * rbeta(10000, 2, 5)
+earnings_small <- sapply(ability_vec_small, earning_fun, 0.2, 0, 0.1, 0, 1000)
+kink_est <- bunchr(earnings_small, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                   cf_start = 10, cf_end = 10,
+                   exclude_before = 1, exclude_after = 1, binw = 50,
+                    nboots = 100, seed = 123)
+kink_est$results$e
+quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+```
+Now, let's look at a much larger vector, of one million observations. Naturally,
+the confidence interval generated is much smaller. Note that, with a larger
+population, we could reliably narrow the bins and get a more accurate estimate.
+
+```{r size_large }
+ability_vec_large <- 4000 * rbeta(1000000, 2, 5)
+earnings_large <- sapply(ability_vec_large, earning_fun, 0.2, 0, 0.1, 0, 1000)
+kink_est <- bunchr(earnings_large, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                   cf_start = 50, cf_end = 50,
+                   exclude_before = 5, exclude_after = 5, binw = 10,
+                   nboots = 100, seed = 123)
+kink_est$results$e
+quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+```
+Note that, with a larger population, we could reliably narrow the bins and get
+a more accurate estimate. Using only 10 bins before and after the bunching bin:
+
+  ```{r size_large2}
+kink_est <- bunchr(earnings_large, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                   cf_start = 50, cf_end = 50,
+                   exclude_before = 1, exclude_after = 1, binw = 5,
+                   nboots = 100, seed = 123, draw = F)
+kink_est$results$e
+quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+```
+
+## Looking for Trouble
+
+Generally speaking, the estimation strategy in these procedures are likely to
+attenuate, rather than exacerbate, the estimates for elasticity. However, it
+is worthwhile to see what happens if, by mistake, we wrongly specify the earnings
+or elasticity.
+
+We can simulate an earning vector with no bunching and see the estimates, and
+run `bunchr` on it.
+
+```{r error1}
+earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.1, 0, 1000)
+bunch_viewer(earning_vec, 1000, 10, 10, 1, 1, binw = 50, trimy=F)
+kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 0,
+                   cf_start = 50, cf_end = 50,
+                   exclude_before = 1, exclude_after = 1, binw = 10,
+                   nboots = 100, seed = 123, draw = F)
+```
+
+Woops! Can't do this. The formula for elasticity includes the logarithm of the
+proportion of net-of-tax rates before and after the kink. Setting them equal
+generates a NaN, as the zeroed logarithm term is in the denominator.
+
+But let's see what `bunchr` does when we try to estimate a marginal tax rate
+change, when in fact there was no change. Presumably, as there is no visible
+bunching, the estimates would be zero. Indeed:
+
+```{r error2}
+kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                   cf_start = 50, cf_end = 50,
+                   exclude_before = 1, exclude_after = 1, binw = 10,
+                   nboots = 100, seed = 123, draw = F)
+kink_est$results$e
+quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+```
+
+What would happen if bunching does occur, but we did not specity the tax rates
+correctly when running `bunchr`? Let's create an earnings vector with a tax rate
+change from 0% to 30%, but run `bunchr` for a smaller tax change, 0% to 20%. As
+the observed bunching is higher than what would be expected for a change from 0%
+to 20% with elasticity of 0.2, `bunchr` estimates a higher elasticity of earnings.
+This kind of user-induced error cannot be detected, so make sure to input the
+parameters correctly.
+
+```{r error3}
+earning_vec <- sapply(ability_vec, earning_fun, elas = 0.2, t1 = 0, t2 = 0.3,
+                      Tax = 0, zstar = 1000)
+kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0,
+                   cf_start = 50, cf_end = 50,
+                   exclude_before = 1, exclude_after = 1, binw = 10,
+                   nboots = 100, seed = 123, draw = F)
+kink_est$results$e
+quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+```
+
+
+
+

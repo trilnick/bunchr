@@ -1,0 +1,21 @@
+Package: bunchr
+Type: Package
+Title: Analyze bunching in a kink or notch setting
+Version: 0.0.0.9000
+Author: person("Itai", "Trilnick", email = "itai.trilnick@berkeley.edu",
+    role = c("aut", "cre"))
+Maintainer: Itai Trilnick <itai.trilnick@berkeley.edu>
+Description: This package help viewing and analyzing data where bunching
+    might occur. For settings of earnings data under a kinked or notched
+    tax regime, it estimates the elasticity of earnings w.r.t. the
+    net-of-tax rate.
+URL: http://github.com/trilnick/bunchr
+BugReports: http://github.com/trilnick/bunchr/issues
+License: MIT + file LICENSE
+LazyData: TRUE
+RoxygenNote: 5.0.1
+Imports: stats
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
