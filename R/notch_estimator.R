@@ -106,6 +106,12 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   reg_data$cf_counts <- bunch_hist$counts   # cf_counts to be changed late
   colnames(reg_data) <- c("mid","counts","cf_counts")
 
+  # save the bins outside the CF area:
+  saved_data <- reg_data[reg_data$mid < zstar - cf_start * binw |
+                           reg_data$mid > zstar + cf_end * binw,]
+  saved_data$cf_counts <- NA
+  saved_data$excluded <- NA
+
   # keep only the analysis part, between cf_start and cf_end bins
   reg_data <- reg_data[reg_data$mid >= zstar - cf_start * binw &
                          reg_data$mid <= zstar + cf_end * binw,]
@@ -118,8 +124,6 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
     useful_calc <- ceiling (0.3 * cf_end)
     exclude_after <- cf_end - useful_calc
   }
-
-  # estimate a polynomial counterfactual, excluding the area (should include visible notch effect)
 
   ## define the bins to exclude (the bunching bins)
   # create a list of excluded bins (list of bin mids)
@@ -278,10 +282,16 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
                                         ))
   }
 
+  # creating the complete histogram data to be returned
+  return_data <- saved_data[saved_data$mid < zstar - cf_start * binw, ]
+  return_data <- rbind(return_data, reg_data[,c(1:4)])
+  return_data <- rbind(return_data,
+                       saved_data[saved_data$mid > zstar + cf_start * binw, ])
+
   results=list("e" = est_e,     # estimate for elasticity
                "Iterations" = iterations,
                "notch_size" = new_delta_zed * binw,
-               "data" = reg_data[,c(1:4)])
+               "data" = return_data)
 
   return(results)
 
