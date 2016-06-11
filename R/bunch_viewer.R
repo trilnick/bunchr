@@ -1,7 +1,9 @@
 #' Visualizing a histogram and potential excluded areas
 #'
 #' This function is meant to aid find excluded bins and analysis area for a
-#' bunching study. It displays a histogram with borders.
+#' bunching study. It displays a histogram with borders. Optionally, you can get
+#' the actual histogram back. This is convenient, as the kink/notch point is set
+#' as the center of a bin.
 #'
 #' @param earnings Vector of earnings, hopefully a very large one
 #' @param zstar Place of notch/kink (critical earning point)
@@ -14,8 +16,9 @@
 #' @param binw Bin width.
 #' @param trimy Logical. Should the y-axis be trimmed to better show off-bunching
 #' histogram?
+#' @param report Should the function return the actual histogram?
 #'
-#' @return A plot
+#' @return A plot, the actual histogram if report is set to TRUE.
 #'
 #' @seealso \code{\link{bunchr}}
 #'
@@ -28,7 +31,7 @@
 #'
 bunch_viewer <- function(earnings, zstar=NA, cf_start=NA, cf_end=NA,
                          exclude_before=NA, exclude_after=NA,
-                         binw=NA, trimy=TRUE) {
+                         binw=NA, trimy=TRUE, report = FALSE) {
 
   ## ---------------------------------------------------------------------------
   ## Error handling
@@ -76,4 +79,9 @@ bunch_viewer <- function(earnings, zstar=NA, cf_start=NA, cf_end=NA,
              zstar + binw / 2 + cf_end * binw), col = "red", lty = 2, lwd = 2)
   legend("topright",col=c("black","red","green4"),lty=c(2,2,2),
          legend=c("Kink/Notch point","Analysis Area","Excluded Area"))
+  #
+  # return the histogram
+  if (report == TRUE) {
+    return(bunch_hist)
+  }
 }
