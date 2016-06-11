@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r settings, include=FALSE, echo=FALSE}
-#devtools::load_all()
+devtools::load_all()
 knitr::opts_chunk$set( fig.width = 7, fig.height = 4,
                       warning = TRUE,
                       error = TRUE )
