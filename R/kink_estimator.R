@@ -103,8 +103,13 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
   reg_data <- as.data.frame(bunch_hist$mids)
   reg_data$counts <- bunch_hist$counts
   reg_data$cf_counts <- bunch_hist$counts   # cf_counts to be changed later
-  # reg_data$cf_adjust <- reg_data$cf_counts # for corrected counter-factual
   colnames(reg_data) <- c("mid","counts","cf_counts")
+
+  # save the bins outside the CF area:
+  saved_data <- reg_data[reg_data$mid < zstar - cf_start * binw |
+                           reg_data$mid > zstar + cf_end * binw,]
+  saved_data$cf_counts <- NA
+  saved_data$excluded <- NA
 
   # keep only the analysis part, between cf_start and cf_end bins
   reg_data <- reg_data[reg_data$mid >= zstar - cf_start * binw &
@@ -186,10 +191,8 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
                          direction="backward",trace=0)
 
       } else {temp_reg <- full}
-      # Update bunching estimator
+      # update bunching estimator
       new_B <- sum((temp_reg)$coefficients[2:(length(excluded_list) + 1)])
-      # Update counter-factual histogram
-      # reg_data$cf_adjust <- predict(temp_reg,cbind(reg_data[,c(1,3)],cheat_excluded))
       # update counter
       counter <- counter + 1
     }
@@ -211,6 +214,11 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
            legend=c("CF calc range","Excluded bins","CF distribution"))
   }
 
+  # creating the complete histogram data to be returned
+  return_data <- saved_data[saved_data$mid < zstar - cf_start * binw, ]
+  return_data <- rbind(return_data, reg_data[,c(1:4)])
+  return_data <- rbind(return_data,
+                       saved_data[saved_data$mid > zstar + cf_start * binw, ])
 
   #calculating elasticity and returning results
   if (correct == TRUE) {
@@ -220,7 +228,7 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
     #
     results <- list("e" = est_e,      #estimate for elasticity of earnings
                     "iterations" = counter - 1,
-                  "data" = reg_data[,c(1:4)])        #the histograms
+                  "data" = return_data )        #the histograms
     return(results)
   } else {
     est_b <- naive_B/(sum(reg_data$cf_counts[!reg_data$excluded == 1] /
@@ -228,7 +236,7 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
     est_e <- est_b/(zstar * log( (1 - t1)/(1 - t2) ))
     results <- list("e" = est_e, #estimate for elasticity of earnings
                     "iterations" = counter - 1,
-                    "data" = reg_data[,c(1:4)])  #the histograms
+                    "data" = return_data )  #the histograms
     return(results)
   }
 }
