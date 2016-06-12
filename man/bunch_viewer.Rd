@@ -5,7 +5,8 @@
 \title{Visualizing a histogram and potential excluded areas}
 \usage{
 bunch_viewer(earnings, zstar = NA, cf_start = NA, cf_end = NA,
-  exclude_before = NA, exclude_after = NA, binw = NA, trimy = TRUE)
+  exclude_before = NA, exclude_after = NA, binw = NA, trimy = TRUE,
+  report = FALSE)
 }
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one}
@@ -26,13 +27,17 @@ histogram should start.}
 
 \item{trimy}{Logical. Should the y-axis be trimmed to better show off-bunching
 histogram?}
+
+\item{report}{Should the function return the actual histogram?}
 }
 \value{
-A plot
+A plot, the actual histogram if report is set to TRUE.
 }
 \description{
 This function is meant to aid find excluded bins and analysis area for a
-bunching study. It displays a histogram with borders.
+bunching study. It displays a histogram with borders. Optionally, you can get
+the actual histogram back. This is convenient, as the kink/notch point is set
+as the center of a bin.
 }
 \examples{
 ability_vec <- 4000 * rbeta(100000, 2, 5)
