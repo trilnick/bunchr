@@ -67,8 +67,8 @@ estim <- bunchr(earning_vec, zstar = 500, t1 = 0, t2 = 0.2, Tax = 0,
 median_e <- median(estim$booted_e)
 
 test_that("elasticity estimate is zero", {
-  expect_lt(median_e, 0)
-  expect_gt(median_e, 0.001)
+  expect_lt(median_e, 0.001)
+  expect_gt(median_e, 0)
 })
 
 # testing if this works #3: different distribution
@@ -82,8 +82,8 @@ estim <- bunchr(earning_vec, zstar = 1200, t1 = 0.3, t2 = 0.4, Tax = 0,
                 nboots = 100, seed = 2016)
 median_e <- median(estim$booted_e)
 test_that("elasticity estimate is zero", {
-  expect_lt(median_e, 0.25)
-  expect_gt(median_e, 0.35)
+  expect_lt(median_e, 0.35)
+  expect_gt(median_e, 0.25)
 })
 
 # testing if this works #4: same story as #3, wrong zstar in analysis
@@ -94,8 +94,8 @@ estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.3, t2 = 0.4, Tax = 0,
                 nboots = 100, seed = 2016)
 median_e <- median(estim$booted_e)
 test_that("elasticity estimate is zero", {
-  expect_lt(median_e, 0)
-  expect_gt(median_e, 0.001)
+  expect_lt(median_e, 0.001)
+  expect_gt(median_e, 0)
 })
 
 # testing if this works #5: robustness check (larger bins, larger excluded area)
@@ -106,8 +106,8 @@ estim <- bunchr(earning_vec, zstar = 1200, t1 = 0.3, t2 = 0.4, Tax = 0,
                 nboots = 100, seed = 2016)
 median_e <- median(estim$booted_e)
 test_that("elasticity estimate is zero", {
-  expect_lt(median_e, 0.25)
-  expect_gt(median_e, 0.35)
+  expect_lt(median_e, 0.35)
+  expect_gt(median_e, 0.25)
 })
 
 # testing if this works #5: robustness check (larger bins, larger excluded area)
@@ -118,8 +118,8 @@ estim <- bunchr(earning_vec, zstar = 1200, t1 = 0.3, t2 = 0.4, Tax = 0,
                 nboots = 100, seed = 2016)
 median_e <- median(estim$booted_e)
 test_that("elasticity estimate is zero", {
-  expect_lt(median_e, 0.25)
-  expect_gt(median_e, 0.35)
+  expect_lt(median_e, 0.35)
+  expect_gt(median_e, 0.25)
 })
 
 # more tests #6: really strong bunching, large delta t
@@ -132,8 +132,8 @@ estim <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.5, Tax = 0,
                 nboots = 100, seed = 2016)
 median_e <- median(estim$booted_e)
 test_that("elasticity estimate is zero", {
-  expect_lt(median_e, 0.15)
-  expect_gt(median_e, 0.25)
+  expect_lt(median_e, 0.25)
+  expect_gt(median_e, 0.15)
 })
 
 # even more tests #7: adding random elasticity
@@ -155,8 +155,8 @@ estim <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0,
 median_e <- median(estim$booted_e)
 test_that("elasticity estimate is zero", {
   expect_true(mean(elas_vec) > 0.18 & mean(elas_vec) < 0.22)
-  expect_lt(median_e, 0.15)
-  expect_gt(median_e, 0.25)
+  expect_lt(median_e, 0.25)
+  expect_gt(median_e, 0.15)
 })
 
 # clean up

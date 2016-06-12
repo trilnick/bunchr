@@ -82,8 +82,8 @@ estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
 median_e <- median(estim$booted_e)
 
 test_that("it actually works", {
-  expect_lt(median_e, 0)
-  expect_gt(median_e, 0.05)
+  expect_lt(median_e, 0.05)
+  expect_gt(median_e, 0)
 })
 
 # test #3 - very little cf on the left side
@@ -98,8 +98,8 @@ estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
 median_e <- median(estim$booted_e)
 
 test_that("it actually works", {
-  expect_lt(median_e, 0.25)
-  expect_gt(median_e, 0.35)
+  expect_lt(median_e, 0.35)
+  expect_gt(median_e, 0.25)
 })
 
 # test #3 - different distribution, t2 > t1
@@ -116,8 +116,8 @@ estim <- bunchr(earning_vec, zstar = 1200, t1 = 0.1, t2 = 0.2, Tax = 100,
 median_e <- median(estim$booted_e)
 quantile(estim$booted_e, probs = c(0,0.05,0.1,0.25,0.5,0.75,0.9,0.95,1))
 test_that("it actually works", {
-  expect_lt(median_e, 0.25)
-  expect_gt(median_e, 0.35)
+  expect_lt(median_e, 0.35)
+  expect_gt(median_e, 0.25)
 })
 
 # test #4 - adding random elasticity
@@ -141,8 +141,8 @@ estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.2, t2 = 0.2, Tax = 200,
 quantile(estim$booted_e, probs = c(0,0.05,0.1,0.25,0.5,0.75,0.9,0.95,1))
 median_e <- median(estim$booted_e)
 test_that("it actually works", {
-  expect_lt(median_e, 0.25)
-  expect_gt(median_e, 0.35)
+  expect_lt(median_e, 0.35)
+  expect_gt(median_e, 0.25)
 })
 
 
