@@ -58,7 +58,7 @@ bunch_viewer <- function(earnings, zstar=NA, cf_start=NA, cf_end=NA,
 
   # create a histogram for this distribution - make zstar center of a bin
   useful_calc <- ceiling( (zstar - min(earnings)) / binw )
-  bunch_hist <- hist(earnings,
+  bunch_hist <- graphics::hist(earnings,
               breaks = seq(from = floor((zstar - useful_calc * binw)) - binw/2,
                            to=(ceiling(max(earnings) + binw)), by = binw),
               plot=FALSE)
@@ -69,15 +69,15 @@ bunch_viewer <- function(earnings, zstar=NA, cf_start=NA, cf_end=NA,
          graphy <- c(min(bunch_hist$counts),1.1 * max(bunch_hist$counts))
          )
   # plotting the thing
-  plot(bunch_hist, freq = TRUE, ylim = graphy,
+  graphics::plot(bunch_hist, freq = TRUE, ylim = graphy,
        main=paste0("Count Histogram"),
        xlab="Running Variable",ylab="Counts (bunch not to scale)")
-  abline(v = zstar, lty = 2,lwd = 2)
-  abline(v=c(zstar - exclude_before * binw, zstar + exclude_after * binw),
+  graphics::abline(v = zstar, lty = 2,lwd = 2)
+  graphics::abline(v=c(zstar - exclude_before * binw, zstar + exclude_after * binw),
          col="green4", lty = 2, lwd = 2)
-  abline(v=c(zstar - binw / 2 - cf_start * binw,
+  graphics::abline(v=c(zstar - binw / 2 - cf_start * binw,
              zstar + binw / 2 + cf_end * binw), col = "red", lty = 2, lwd = 2)
-  legend("topright",col=c("black","red","green4"),lty=c(2,2,2),
+  graphics::legend("topright",col=c("black","red","green4"),lty=c(2,2,2),
          legend=c("Kink/Notch point","Analysis Area","Excluded Area"))
   #
   # return the histogram

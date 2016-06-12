@@ -89,7 +89,7 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
   ## ---------------------------------------------------------------------------
   # create a histogram for this distribution - make zstar center of a bin
   useful_calc <- ceiling( (zstar - min(earnings)) / binw )
-  bunch_hist <- hist(earnings,
+  bunch_hist <- graphics::hist(earnings,
                   breaks=seq(from=floor((zstar - useful_calc * binw)) - binw / 2,
                              to=(ceiling(max(earnings) + binw)), by = binw),
                   plot=FALSE)
@@ -144,7 +144,7 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
   null <- stats::lm(counts ~ excluded, data=reg_data)
   full <- stats::lm(as.formula(paste0("counts ",vars)), data=reg_data)
   if (select == TRUE) {
-    reg_naive <- step(full, scope = list(lower = null, upper = full),
+    reg_naive <- stats::step(full, scope = list(lower = null, upper = full),
                        direction = "backward",trace = 0)
 
   } else {reg_naive <- full}
@@ -187,7 +187,7 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
       full <- stats::lm(as.formula(paste0("counts + extra ",vars)), data = reg_data)
       #
       if (select==TRUE) {
-        temp_reg <- step(full, scope=list(lower=null, upper=full),
+        temp_reg <- stats::step(full, scope=list(lower=null, upper=full),
                          direction="backward",trace=0)
 
       } else {temp_reg <- full}
@@ -200,17 +200,18 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
   #
   # Drawing the histogram
   if (draw==TRUE) {
-    plot(bunch_hist, freq=TRUE,ylim=c(0,1.1*quantile(bunch_hist$counts, probs=c(0.99))),
+    graphics::plot(bunch_hist, freq=TRUE,ylim=c(0,1.1*quantile(bunch_hist$counts,
+                                                                probs=c(0.99))),
          main=paste0("Bunching Visualization"),
          xlab="Earnings",ylab="Counts (bunch not to scale)")
-    lines(x=reg_data$mid, y=reg_data$cf_counts,col="purple",lwd=2)
-    abline(v=c(zstar - binw / 2 - exclude_before * binw,
+    graphics::lines(x=reg_data$mid, y=reg_data$cf_counts,col="purple",lwd=2)
+    graphics::abline(v=c(zstar - binw / 2 - exclude_before * binw,
                zstar + binw / 2 + exclude_after * binw),
            col="green4", lty=2, lwd=2)
     abline(v=c(zstar - binw / 2 - cf_start * binw,
                zstar + binw / 2 + cf_end * binw), col="red",
            lty=2, lwd=2)
-    legend("topright",col=c("red","green","purple"),lty=c(2,2,1),
+    graphics::legend("topright",col=c("red","green","purple"),lty=c(2,2,1),
            legend=c("CF calc range","Excluded bins","CF distribution"))
   }
 
