@@ -4,8 +4,8 @@
 \alias{bunch_viewer}
 \title{Visualizing a histogram and potential excluded areas}
 \usage{
-bunch_viewer(earnings, zstar = NA, cf_start = NA, cf_end = NA,
-  exclude_before = NA, exclude_after = NA, binw = NA, trimy = TRUE,
+bunch_viewer(earnings, zstar = NA, cf_start = 10, cf_end = 50,
+  exclude_before = 2, exclude_after = 20, binw = NA, trimy = TRUE,
   report = FALSE)
 }
 \arguments{
@@ -42,7 +42,7 @@ as the center of a bin.
 \examples{
 ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.2, 0, 1000)
-bunch_viewer(earning_vec, 1000, 20, 40, 2, 2, 20, TRUE)
+bunch_viewer(earning_vec, 1000, 20, 40, 2, 2, 20, TRUE, FALSE)
 
 }
 \seealso{
