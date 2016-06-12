@@ -142,7 +142,7 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
 
   ## Run regression for counter-factual
   null <- stats::lm(counts ~ excluded, data=reg_data)
-  full <- stats::lm(as.formula(paste0("counts ",vars)), data=reg_data)
+  full <- stats::lm(stats::as.formula(paste0("counts ",vars)), data=reg_data)
   if (select == TRUE) {
     reg_naive <- stats::step(full, scope = list(lower = null, upper = full),
                        direction = "backward",trace = 0)
@@ -184,7 +184,7 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
       }
       # run regression
       null <- stats::lm(counts + extra ~ excluded, data = reg_data)
-      full <- stats::lm(as.formula(paste0("counts + extra ",vars)), data = reg_data)
+      full <- stats::lm(stats::as.formula(paste0("counts + extra ",vars)), data = reg_data)
       #
       if (select==TRUE) {
         temp_reg <- stats::step(full, scope=list(lower=null, upper=full),
@@ -208,7 +208,7 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
     graphics::abline(v=c(zstar - binw / 2 - exclude_before * binw,
                zstar + binw / 2 + exclude_after * binw),
            col="green4", lty=2, lwd=2)
-    abline(v=c(zstar - binw / 2 - cf_start * binw,
+    graphics::abline(v=c(zstar - binw / 2 - cf_start * binw,
                zstar + binw / 2 + cf_end * binw), col="red",
            lty=2, lwd=2)
     graphics::legend("topright",col=c("red","green","purple"),lty=c(2,2,1),

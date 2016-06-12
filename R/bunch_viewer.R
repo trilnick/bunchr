@@ -65,7 +65,7 @@ bunch_viewer <- function(earnings, zstar = NA, cf_start = 10, cf_end = 50,
   # dealing with preference for y axis trim
   ifelse(trimy == TRUE,
          graphy <- c(min(bunch_hist$counts), 1.3 * as.numeric(
-                           quantile(bunch_hist$counts, probs = c(0.95)))),
+                         stats::quantile(bunch_hist$counts, probs = c(0.95)))),
          graphy <- c(min(bunch_hist$counts),1.1 * max(bunch_hist$counts))
          )
   # plotting the thing

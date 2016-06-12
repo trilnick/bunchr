@@ -154,7 +154,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   }
   # Run regression for counter-factual
   null <- stats::lm(counts ~ excluded, data=reg_data)
-  full <- stats::lm(as.formula(paste0("counts ~ excluded",vars)), data=reg_data)
+  full <- stats::lm(stats::as.formula(paste0("counts ~ excluded",vars)), data=reg_data)
   if (select == TRUE) {
     reg_naive <- stats::step(full, scope = list(lower = null, upper = full),
                       direction = "backward",trace = 0)
@@ -265,7 +265,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   # drawing
   if (draw==TRUE) {
     graphics::plot(bunch_hist, freq=TRUE,ylim=c(0,1.1 *
-                            quantile(bunch_hist$counts, probs = c(0.99))),
+                            stats::quantile(bunch_hist$counts, probs = c(0.99))),
          main=paste0("Bunching Visualization"),
              xlab="Earnings",ylab="Counts (bunch not to scale)")
     graphics::lines(x = reg_data$mid, y = reg_data$cf_counts,col = "purple",lwd=2)
