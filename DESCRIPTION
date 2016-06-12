@@ -17,5 +17,6 @@ RoxygenNote: 5.0.1
 Imports: stats
 Suggests: knitr,
     rmarkdown,
-    testthat
+    testthat,
+    roxygen2
 VignetteBuilder: knitr
