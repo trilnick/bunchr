@@ -68,7 +68,7 @@ median_e <- median(estim$booted_e)
 
 test_that("elasticity estimate is zero", {
   expect_lt(median_e, 0.001)
-  expect_gt(median_e, 0)
+  expect_gt(median_e, -0.001)
 })
 
 # testing if this works #3: different distribution
@@ -95,7 +95,7 @@ estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.3, t2 = 0.4, Tax = 0,
 median_e <- median(estim$booted_e)
 test_that("elasticity estimate is zero", {
   expect_lt(median_e, 0.001)
-  expect_gt(median_e, 0)
+  expect_gt(median_e, -0.001)
 })
 
 # testing if this works #5: robustness check (larger bins, larger excluded area)

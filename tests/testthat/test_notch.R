@@ -56,7 +56,7 @@ test_that("cf and excluded area", {
 estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
                          cf_start = 50, cf_end = 100,
                          exclude_before = 2, exclude_after = 50, binw = 10,
-                         select = T, draw=T,
+                         select = T, draw = F,
                          nboots = 100, seed = 2016)
 
 median_e <- median(estim$booted_e)
@@ -121,6 +121,7 @@ test_that("it actually works", {
 })
 
 # test #4 - adding random elasticity
+ability_vec <- 1500*runif(100000,0,2)
 elas_vec <- 0.2 + rnorm(100000, mean = 0, sd = 0.05)
 # need to drop negative elasticities...
 ability_vec <- ability_vec[elas_vec >=0 ]
@@ -131,18 +132,18 @@ earning_vec <- rep(NA, num)
 for ( i in 1:num) {
   earning_vec[i] <- earning_fun(ability_vec[i], elas_vec[i], 0.2, 0.2, 200, 1000)
 }
-bunch_viewer(earning_vec, zstar = 1000, cf_start = 25, cf_end = 50,
-             exclude_after = 31, binw = 20)
+bunch_viewer(earning_vec, zstar = 1000, cf_start = 30, cf_end = 70,
+             exclude_after = 30, binw = 20)
 estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.2, t2 = 0.2, Tax = 200,
-                cf_start = 25, cf_end = 50,
-                exclude_before = 2, exclude_after = 31, binw = 20,
+                cf_start = 30, cf_end = 70,
+                exclude_before = 2, exclude_after = 30, binw = 20,
                 select = T, draw = T,
                 nboots = 100, seed = 2016)
 quantile(estim$booted_e, probs = c(0,0.05,0.1,0.25,0.5,0.75,0.9,0.95,1))
 median_e <- median(estim$booted_e)
 test_that("it actually works", {
-  expect_lt(median_e, 0.35)
-  expect_gt(median_e, 0.25)
+  expect_lt(median_e, 0.25)
+  expect_gt(median_e, 0.15)
 })
 
 
