@@ -52,7 +52,7 @@ histogram? See details.}
   \item{\code{Bn}}{The sum of total estimated extra bunching in the area starting
   at cf_start and through the notch bin (zstar) }
   \item{\code{notch_size}}{Distance between notch bin and bin where the estimated
-  influece of the notch ends, delta_zed}
+  influence of the notch ends, delta_zed}
   \item{\code{data}}{A data frame with bin mids, counts, counter-factual
   counts, and excluded dummy}
 }
@@ -60,7 +60,7 @@ histogram? See details.}
 \description{
 Given a kinked budget set, this function gets a vector of earnings and
 analyzes bunching. This function could be run independently, but best used
-throught the \code{bunchr} function.
+through the \code{bunchr} function.
 }
 \details{
 A histogram is created from the earnings vector, with the kink

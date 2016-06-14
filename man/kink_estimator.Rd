@@ -16,7 +16,7 @@ kink_estimator(earnings, zstar, t1, t2, cf_start = NA, cf_end = NA,
 
 \item{t1}{Marginal tax rate before kink.}
 
-\item{t2}{MArginal tax rate after kink.}
+\item{t2}{Marginal tax rate after kink.}
 
 \item{cf_start}{Number of bins before the kink bin where counter-factual
 histogram should start.}
@@ -61,7 +61,7 @@ histogram? See details.}
 \description{
 Given a kinked budget set, this function gets a vector of earnings and
 analyzes bunching. This function could be run independently, but best used
-throught the \code{bunchr} function.
+through the \code{bunchr} function.
 }
 \details{
 A histogram is created from the earnings vector, with the kink

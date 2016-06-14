@@ -2,12 +2,12 @@
 #'
 #' Given a kinked budget set, this function gets a vector of earnings and
 #' analyzes bunching. This function could be run independently, but best used
-#' throught the \code{bunchr} function.
+#' through the \code{bunchr} function.
 #'
 #' @param earnings Vector of earnings, hopefully a very large one.
 #' @param zstar Place of kink (critical earning point).
 #' @param t1 Marginal tax rate before kink.
-#' @param t2 MArginal tax rate after kink.
+#' @param t2 Marginal tax rate after kink.
 #' @param cf_start Number of bins before the kink bin where counter-factual
 #' histogram should start.
 #' @param cf_end Number of bins after the kink bin where counter-factual

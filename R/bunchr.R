@@ -30,7 +30,7 @@
 #'
 #' @details \code{bunchr} checks if the specification has a kink, i.e. if the Tax
 #' parameter is greater than zero. If so, it applies \code{notch_estimator}.
-#' Otherwise, it applies \code{kink_estimator}.  Additionaly, \code{bunchr}
+#' Otherwise, it applies \code{kink_estimator}.  Additionally, \code{bunchr}
 #' can bootstrap by sampling the earnings vector, returning a vector with
 #' the estimated elasticities.
 #'

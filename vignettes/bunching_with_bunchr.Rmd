@@ -11,6 +11,7 @@ vignette: >
 
 ```{r settings, include=FALSE, echo=FALSE}
 devtools::load_all()
+library(bunchr)
 knitr::opts_chunk$set( fig.width = 7, fig.height = 4,
                       warning = TRUE,
                       error = TRUE )
@@ -126,7 +127,7 @@ quantile(kink_est$booted_Bn, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 
 Note: we modeled the earnings with elasticity of 0.2, but got an estimate of 0.186.
 That's no so bad, considering that the width of the bins and the excluded area have
-an attenuating effect. We might not be very happy with the bootstrappped 
+an attenuating effect. We might not be very happy with the bootstrapped 
 confidence interval we got. It's pretty wide, both for the elasticity estimate and
 the amount of bunching. Since the number of observations allows it, and the simulation
 is pretty "clean", we can try this with narrower bins and excluded area. This
@@ -196,7 +197,7 @@ useful to change the _exclude\_after_ parameter and see if the plot come out
 better.
 
 Another issue is the counter-factual distribution. For larger notches, the
-inetrpolation is harder. Remember the interpolation is based on the histogram
+interpolation is harder. Remember the interpolation is based on the histogram
 bins outside the excluded area (green lines) but inside the analysis area (red).
 If the counter-factual distribution in the output plot does not seem convincing,
 a few measures can be taken:
@@ -290,7 +291,7 @@ kink_est$e
 quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
 
-What would happen if bunching does occur, but we did not specity the tax rates
+What would happen if bunching does occur, but we did not specify the tax rates
 correctly when running `bunchr`? Let's create an earnings vector with a tax rate
 change from 0% to 30%, but run `bunchr` for a smaller tax change, 0% to 20%. As
 the observed bunching is higher than what would be expected for a change from 0%

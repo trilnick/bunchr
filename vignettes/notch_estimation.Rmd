@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-  This vigniette is meant to explain how `bunchr` estimates the earning elasticity
+  This vignette is meant to explain how `bunchr` estimates the earning elasticity
 from bunching induced by a notch. These calculations derive the formulas used for
 notch analysis. It closely follows the discussion by Kleven^[Kleven, H.J., 2016.
   __"Bunching"_, Annual Review of Economics 8(1)].
@@ -84,6 +84,6 @@ in `bunchr`, takes the marginal taxes, the Tax variable, and $\Delta z^*$, retur
 the squared difference between the utilities defined with some $e$. Using the
 `optimize` function in the stats package, `bunchr` finds the elasticity that
 minimizes the squared distance between these utilities. Note that, while by definition
-of the utility function, earnings cause disutility (from work). Hece elasticity should
+of the utility function, earnings cause disutility (from work). Hence elasticity should
 be positive. `bunchr` bounds the elasticity search between 0 and 5, the latter being
 a very high elasticity in most settings, let alone labor supply.
