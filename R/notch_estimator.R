@@ -138,7 +138,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
     reg_data$excluded[reg_data$mid == i] <- 1 + which(excluded_list == i)
   }
   # make the "excluded" variable a factor
-  reg_data$excluded <- as.factor(reg_data$excluded)
+  reg_data$excluded <- stats::as.factor(reg_data$excluded)
   # We need a column of all non-excluded for predicting counter-factual
   cheat_excluded <- data.frame(as.factor(c(rep("1",dim(reg_data)[1]))))
   colnames(cheat_excluded) <- "excluded"

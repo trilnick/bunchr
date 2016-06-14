@@ -202,7 +202,8 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
   #
   # Drawing the histogram
   if (draw==TRUE) {
-    graphics::plot(bunch_hist, freq=TRUE,ylim=c(0,1.1*quantile(bunch_hist$counts,
+    graphics::plot(bunch_hist, freq=TRUE,ylim=c(0,1.1 *
+                                        stats::quantile(bunch_hist$counts,
                                                                 probs=c(0.99))),
          main=paste0("Bunching Visualization"),
          xlab="Earnings",ylab="Counts (bunch not to scale)")
