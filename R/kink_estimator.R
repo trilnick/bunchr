@@ -231,15 +231,17 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
     est_e <- est_b/(zstar * log( (1 - t1) / (1 - t2) ))
     #
     results <- list("e" = est_e,      #estimate for elasticity of earnings
-                    "iterations" = counter - 1,
-                  "data" = return_data )        #the histograms
+                    "Bn" = new_B,     # estimated sum of extra bunching around kink
+                    "b" = est_b,       # normalized rate of bunching w.r.t. cf
+                   "data" = return_data )        #the histograms
     return(results)
   } else {
     est_b <- naive_B/(sum(reg_data$cf_counts[!reg_data$excluded == 1] /
                        (length(excluded_list) * binw)))
     est_e <- est_b/(zstar * log( (1 - t1)/(1 - t2) ))
     results <- list("e" = est_e, #estimate for elasticity of earnings
-                    "iterations" = counter - 1,
+                    "Bn" = naive_B,   # (naive) sum of extra bunching around kink
+                    "b" = est_b,
                     "data" = return_data )  #the histograms
     return(results)
   }

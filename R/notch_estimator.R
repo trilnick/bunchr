@@ -256,7 +256,6 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   # calculating the bunching estimate - for the bunch
   new_B <- sum(sum(temp_reg$coefficients[2:(2 + exclude_before + 1)]))
 
-
   # estimated elasticity
   est_e <- stats::optimize(elas_equalizer, c(0, 5), t1, t2, Tax, zstar,
                     delta_zed, binw)$minimum
@@ -289,8 +288,9 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   return_data <- rbind(return_data,
                        saved_data[saved_data$mid > zstar + cf_start * binw, ])
 
-  results=list("e" = est_e,     # estimate for elasticity
-               "Iterations" = iterations,
+  results=list("e" = est_e,                           # estimate for elasticity
+               "Bn" = new_B,               # estimate of sum extra bunching from
+                                          # start of excluding area to notch bin
                "notch_size" = new_delta_zed * binw,
                "data" = return_data)
 
