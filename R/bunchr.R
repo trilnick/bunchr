@@ -48,7 +48,7 @@
 #' # bunch_viewer(earning_vec, 1000, 40, 40, 1, 1, binw = 10)
 #' elast_est <- bunchr(earning_vec, 1000, 0, 0.2, Tax = 0, 40, 40, 1, 1,
 #' binw = 10, draw=TRUE, nboots = 10, seed = 16)
-#'elast_est$e
+#' elast_est$e
 #' quantile(elast_est$booted_e, probs=c(0.05, 0.1, 0.5, 0.9, 0.95))
 #'
 #' # analyzing a notch
