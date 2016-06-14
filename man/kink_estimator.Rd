@@ -50,8 +50,12 @@ histogram? See details.}
 \code{kink_estimator} returns a list of the following variables:
 \describe{
   \item{\code{e}}{Estimated elasticity}
-  \item{\code{iterations}}{Number of iterations in the correction process}
-  \item{\code{data}}{A data frame with buching histogram.}
+  \item{\code{Bn}}{The sum of total estimated extra bunching in the excluded
+  bins}
+  \item{\code{b}}{The rate of extra bunching in the excluded area, divided by
+  the length of area in \$}
+  \item{\code{data}}{A data frame with bin mids, counts, counter-factual
+  counts, and excluded dummy}
 }
 }
 \description{

@@ -39,11 +39,15 @@
 #'
 #'
 #'
-#' @return \code{kink_estimator} returns a list of the following variables:
+#' @return \code{notch_estimator } returns a list of the following variables:
 #' \describe{
 #'   \item{\code{e}}{Estimated elasticity}
-#'   \item{\code{iterations}}{Number of iterations in the correction process}
-#'   \item{\code{data}}{A data frame with buching histogram.}
+#'   \item{\code{Bn}}{The sum of total estimated extra bunching in the area starting
+#'   at cf_start and through the notch bin (zstar) }
+#'   \item{\code{notch_size}}{Distance between notch bin and bin where the estimated
+#'   influece of the notch ends, $\Delta z^*$}
+#'   \item{\code{data}}{A data frame with bin mids, counts, counter-factual
+#'   counts, and excluded dummy}
 #' }
 #'
 #'

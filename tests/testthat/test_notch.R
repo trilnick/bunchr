@@ -65,8 +65,8 @@ test_that("it actually works", {
   expect_lt(median_e, 0.25)
   expect_gt(median_e, 0.15)
   expect_is(estim, "list")
-  expect_length(estim, 2)
-  expect_length(estim$results, 4)
+  expect_length(estim, 7)
+  expect_length(estim$booted_notch_size, 100)
   expect_length(estim$booted_e, 100)
 })
 

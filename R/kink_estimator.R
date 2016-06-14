@@ -37,15 +37,16 @@
 #' It runs backwards from the full polynomial model, trying to find the best
 #' explanatory model using the Akaike information criterion.
 #'
-#'
-#'
 #' @return \code{kink_estimator} returns a list of the following variables:
 #' \describe{
 #'   \item{\code{e}}{Estimated elasticity}
-#'   \item{\code{iterations}}{Number of iterations in the correction process}
-#'   \item{\code{data}}{A data frame with buching histogram.}
+#'   \item{\code{Bn}}{The sum of total estimated extra bunching in the excluded
+#'   bins}
+#'   \item{\code{b}}{The rate of extra bunching in the excluded area, divided by
+#'   the length of area in \$}
+#'   \item{\code{data}}{A data frame with bin mids, counts, counter-factual
+#'   counts, and excluded dummy}
 #' }
-#'
 #'
 #' @references Chetty, R., Friedman, J., Olsen, T., Pistaferri, L. (2009)
 #' \emph{Adjustment Costs, Firm Responses, and Micro vs. Macro Labor Supply

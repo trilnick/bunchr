@@ -14,6 +14,7 @@ devtools::load_all()
 knitr::opts_chunk$set( fig.width = 7, fig.height = 4,
                       warning = TRUE,
                       error = TRUE )
+knitr::opts_knit$set(root.dir = "C:\\Users\\User\\Box Sync\\btl\\bunching\\bunchr\\inst\\compare")
 ```
 
 A growing literature in empirical economics is focused around bunching. Loosely
@@ -75,7 +76,8 @@ the results of analysis with varying bin widths.
 
 All you need is a vector of earnings. Using `bunch_viewer`, you can see how a
 histogram of your data looks like. Additionally, you can see where you could
-potentially set some of the parameters for analysis.
+potentially set some of the parameters for analysis. And, you can save the 
+histogram in a convenient data frame structure with bin mids and counts.
 
 Let's create an earning distribution for a kinked budget set. First, I create a
 vector of latent abilities, with 100,000 values. Then, I simulate the earnings
@@ -114,49 +116,33 @@ in order to calculate the elasticity, we must provide the marginal tax rates!
 ```{r first_kink}
 kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 10, cf_end = 10,
-                   exclude_before = 2, exclude_after = 2, binw = 50)
+                   exclude_before = 2, exclude_after = 2, binw = 50, nboots = 100)
 kink_est$e
-```
-Note: we modeled the earnings with elasticity of 0.2, but got an estimate of 0.16.
-This might be the result of the width of the bins, the width of the excluded area
-around the kink, or both. Let's try this with narrower bins. Note, I have to adjust
-the other parameters. However, I'll keep the excluded area at the same width.
-
-```{r kink_narrower}
-kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
-                   cf_start = 50, cf_end = 50,
-                   exclude_before = 10, exclude_after = 10, binw = 10)
-kink_est$e
-```
-
-That didn't do much to the elasticity parameter, but we have narrower bins. Now,
-we narrow the excluded area around the kink point. In fact, since I generated a
-"clean" simulation, I can narrow the excluded area to the bunching bin itself,
-setting _exclude_before_ and _exclude_after_ to zero. For the demonstrative
-purpose of this exercise, I'll keep the excluded area to one bin before and one
-bin after the kink bin. I'll also bootstrap the results to get a sense of the
-potential distribution of elasticity parameters. Bootstrapping is done by
-resampling the population vector and running the analysis.
-
-```{r kink_boot1}
-kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
-                   cf_start = 50, cf_end = 50,
-                   exclude_before = 1, exclude_after = 1, binw = 10,
-                   nboots = 100, seed = 123)
-kink_est$results$e
 quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+kink_est$Bn
+quantile(kink_est$booted_Bn, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
 
-These results are much closer to the original. Just for the purpose of demonstration,
-let's run the analysis with the kink bin only as excluded area. I do not include the plotp lot this time.
-```{r kink_boot0}
+Note: we modeled the earnings with elasticity of 0.2, but got an estimate of 0.186.
+That's no so bad, considering that the width of the bins and the excluded area have
+an attenuating effect. We might not be very happy with the bootstrappped 
+confidence interval we got. It's pretty wide, both for the elasticity estimate and
+the amount of bunching. Since the number of observations allows it, and the simulation
+is pretty "clean", we can try this with narrower bins and excluded area. This
+does shrink the confidence intervals, and gives a point estimate closer to 
+the value we used to generate the data. 
+
+```{r second_kink2}
 kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
-                   cf_start = 50, cf_end = 50,
-                   exclude_before = 0, exclude_after = 0, binw = 10,
+                   cf_start = 500, cf_end = 500,
+                   exclude_before = 10, exclude_after = 10, binw = 1,
                    nboots = 100, seed = 123, draw = F)
-kink_est$results$e
+kink_est$e
 quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
+kink_est$Bn
+quantile(kink_est$booted_Bn, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
+
 
 ## Analyzing a notch
 
@@ -197,14 +183,15 @@ notch_est <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 2, exclude_after = 25, binw = 20,
                    nboots = 100, seed = 123)
-notch_est$results$e
+notch_est$e
 quantile(notch_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
 
 The example above is a good one: _delta\_zed seems to be the actual end of the
 notch. Sometimes, the output plot will show $\Delta z^*$ not concurring with
-what visibly seems like the end of the notch. In that case, it might be
-useful to change with the exclude_after parameter and see if the plot come out
+what visibly seems like the end of the notch. This usually means that the
+elasticity estimates will be wrong. In that case, it might be
+useful to change the _exclude\_after_ parameter and see if the plot come out
 better.
 
 Another issue is the counter-factual distribution. For larger notches, the
@@ -236,7 +223,7 @@ kink_est <- bunchr(earnings_small, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 10, cf_end = 10,
                    exclude_before = 1, exclude_after = 1, binw = 50,
                     nboots = 100, seed = 123)
-kink_est$results$e
+kink_est$e
 quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
 Now, let's look at a much larger vector, of one million observations. Naturally,
@@ -250,18 +237,19 @@ kink_est <- bunchr(earnings_large, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 5, exclude_after = 5, binw = 10,
                    nboots = 100, seed = 123)
-kink_est$results$e
+kink_est$e
 quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
+
 Note that, with a larger population, we could reliably narrow the bins and get
 a more accurate estimate. Using only 10 bins before and after the bunching bin:
 
-  ```{r size_large2}
+```{r size_large2}
 kink_est <- bunchr(earnings_large, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 1, exclude_after = 1, binw = 5,
                    nboots = 100, seed = 123, draw = F)
-kink_est$results$e
+kink_est$e
 quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
 
@@ -297,7 +285,7 @@ kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 1, exclude_after = 1, binw = 10,
                    nboots = 100, seed = 123, draw = F)
-kink_est$results$e
+kink_est$e
 quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
 
@@ -316,10 +304,87 @@ kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 1, exclude_after = 1, binw = 10,
                    nboots = 100, seed = 123, draw = F)
-kink_est$results$e
+kink_est$e
 quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
 
+## Comparison with Existing Packages
 
+To my knowledge, no _R_ package is publically available for bunching analysis.
+Chetty _et al_ (2011) did distribute their _STATA_ code, which was used for
+kink analysis, and I will use it to validate _bunchr_. Unfortunately, I cannot
+use it with the original administrative data. However, I can run a simulation 
+and test for similarity in results. The _STATA_ package was written by Tore Olsen,
+and can be found in Raj Chetty's website. I do not include it with `bunchr` as I
+am not sure if its copyright status allows it. To replicate these results, you
+will need to download and install the `bunch_count` package for _STATA_, and 
+of course define the working directories properly.
+
+First, I create a dataset with `bunchr`. The _STATA_ package required collapsed,
+binned data. I use `bunch_viewer` to create and export that.
+
+``` {r chetty1, eval=TRUE}
+set.seed(1982)
+ability_vec <- 4000 * rbeta(100000, 2, 5)
+earning_vec <- sapply(ability_vec, earning_fun, 0.3, 0, 0.2, 0, 1000)
+data <- bunch_viewer(earning_vec, 1000, binw=50, report = T)
+sim_data <- data.frame(cbind(data$mids,data$counts))
+colnames(sim_data) = c("earnings","counts")
+write.csv(sim_data, file="sim_data.csv", row.names = F)
+```
+
+Now, run the code in _STATA_:
+
+``` {r chetty2, eval=FALSE}
+insheet using "sim_data.csv", clear
+bunch_count earnings counts, bpoint(1000) ig_low(-10) ig_high(10) low_bunch(-1) high_bunch(1) plot(1) binwidth(50)
+outsheet using "compare_results.csv", replace delim(",")
+``` 
+
+This will generate a plot, output some estimates, and change the dataset so the
+estimated counter-factuals are included as the _plotabc3_ variable. Then, the 
+data will be exported as a .csv file which we will import back to _R_.
+
+
+``` {r chetty3, eval=TRUE}
+chetty_res <- read.csv(file="compare_results.csv")
+chetty_res <- chetty_res[order(chetty_res$earnings), ]
+``` 
+
+Now, we can run `bunchr` on the data. I use the same specification regarding
+the bin width, counter-factual area, excluded area, and correcting for shift on
+the right side of the notch. The main difference is that, since `bunchr` calculates
+the estimated elasticity, it needs the marginal tax rates as inputs (this will not
+matter for the counter-factual estimation). Also note that I shut down the default option for model selection for the counter-factual (mostly useful for notches, 
+and non-existing in `bunch_count`), and use the default 7th degree polynomial.
+
+``` {r chetty4, eval=TRUE}
+estim <- bunchr(earning_vec, 1000, 0, 0.2, 0, 10, 10, 1, 1, 50, max_iter = 200, correct = T, select = F, poly_size = 7, draw = F)
+# creating comparison data-frame
+bunchr_res <- estim$data
+comp_data <- cbind(bunchr_res, chetty_res)
+comp_data$cf_diff <- comp_data$cf_counts - comp_data$plotabc3
+comp_data$per_diff <- 100 * comp_data$cf_diff / comp_data$plotabc3
+
+show_data <- comp_data[,c(1,2,3,9,10,11)]
+colnames(show_data) <- c("earnings", "counts",
+  "bunchr_cf_counts", "bunchcount_cf_counts", "diff",
+  "percent_diff")
+
+write.csv(show_data, file="show_data.csv", row.names=F)
+
+# plot the results
+plot(show_data$earnings, show_data$counts, type="h",
+     main="comparing bunching counter-factuals",
+     xlab="earnings", ylab="counts",
+     xlim=c(200,2000))
+points(show_data$earnings, show_data$bunchr_cf_counts, col="red", pch="*")
+points(show_data$earnings, show_data$bunchcount_cf_counts, col="blue",pch="*")
+legend("topleft", lty=c(1, NA, NA), pch=c(NA, "*","*" ), col=c("black","red","blue"),
+       legend=c("real counts","bunchr cf", "bunch_count cf"))
+```
+
+_sim\_data_.csv, _compare\_results.csv_ and _show\_data.csv_ are available in the
+_compare_ folder of `bunchr`.
 
 

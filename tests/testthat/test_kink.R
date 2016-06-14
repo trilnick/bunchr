@@ -51,9 +51,9 @@ test_that("it actually works", {
   expect_lt(median_e, 0.22)
   expect_gt(median_e, 0.18)
   expect_is(estim, "list")
-  expect_length(estim, 2)
-  expect_length(estim$results, 3)
+  expect_length(estim, 7)
   expect_length(estim$booted_e, 100)
+  expect_length(estim$booted_Bn, 100)
 })
 
 # testing if this works #2: complete inelastic

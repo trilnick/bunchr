@@ -34,12 +34,10 @@
 #' can bootstrap by sampling the earnings vector, returning a vector with
 #' the estimated elasticities.
 #'
-#' @return \code{bunchr} returns the parameters returned by
+#' @return \code{bunchr} returns a list comprising of the parameters returned by
 #' \code{kink_estimator} and \code{notch_estimator}. If bootstraps were asked for,
-#' it returns a list with the function results as the first item, and a vector
-#' of estimated elasticities as the second item. Drawing of histograms is
+#' bootstrapped values are added to the list. Drawing of histograms is
 #' suppressed when running the bootsraps.
-#'
 #'
 #' @seealso \code{\link{kink_estimator}}, \code{\link{notch_estimator}}
 #'
@@ -50,7 +48,7 @@
 #' # bunch_viewer(earning_vec, 1000, 40, 40, 1, 1, binw = 10)
 #' elast_est <- bunchr(earning_vec, 1000, 0, 0.2, Tax = 0, 40, 40, 1, 1,
 #' binw = 10, draw=TRUE, nboots = 10, seed = 16)
-#'elast_est$results$e
+#'elast_est$e
 #' quantile(elast_est$booted_e, probs=c(0.05, 0.1, 0.5, 0.9, 0.95))
 #'
 #' # analyzing a notch
@@ -58,7 +56,7 @@
 #' # bunch_viewer(earning_vec, 1000, 60, 150, 2, 100, binw = 10)
 #' elast_est <- bunchr(earning_vec, 1000, 0.2, 0.2, Tax = 500, 60, 150, 2, 100,
 #' binw = 10, draw=TRUE, nboots = 10, seed = 16)
-#' elast_est$results$e
+#' elast_est$e
 #' quantile(elast_est$booted_e, probs=c(0.05, 0.1, 0.5, 0.9, 0.95))
 #'
 #' @export
@@ -176,9 +174,9 @@ bunchr <- function(earnings, zstar, t1, t2, Tax = 0,
         }
       }
       results <- list("e" = result1$e,
-                      "Bn" = results1$Bn,
-                      "b" = results1$b,
-                      "data" = results1$data,
+                      "Bn" = result1$Bn,
+                      "b" = result1$b,
+                      "data" = result1$data,
                       "booted_e" = boot_e,
                       "booted_Bn" = boot_Bn,
                       "booted_b" = boot_b )
@@ -219,6 +217,7 @@ bunchr <- function(earnings, zstar, t1, t2, Tax = 0,
       results <- list("e" = result1$e,
                       "Bn" = result1$Bn,
                       "notch_size" = result1$notch_size,
+                      "data" = result1$data,
                       "booted_e" = boot_e,
                       "booted_Bn" = boot_Bn,
                       "booted_notch_size" = boot_dz )
