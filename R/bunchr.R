@@ -156,29 +156,39 @@ bunchr <- function(earnings, zstar, t1, t2, Tax = 0,
                               exclude_before, exclude_after, binw, poly_size,
                               convergence, max_iter, correct, select, draw)
     if (nboots > 0) {
-      result2 <- rep(NA, nboots)
+      boot_e <- rep(NA, nboots)
+      boot_Bn <- rep(NA, nboots)
+      boot_b <- rep(NA, nboots)
       if (!is.na(seed)) {
         set.seed(seed)
       }
       for (i in 1:nboots) {
         temp_pop <- sample(earnings,population,replace=TRUE)
-        result2[i] <- kink_estimator(temp_pop, zstar, t1, t2, cf_start, cf_end,
+        temp_result <- kink_estimator(temp_pop, zstar, t1, t2, cf_start, cf_end,
                                      exclude_before, exclude_after, binw, poly_size,
                                      convergence, max_iter, correct, select,
-                                     draw=FALSE)$e
+                                     draw=FALSE)
+        boot_e[i] <- temp_result$e
+        boot_Bn[i] <- temp_result$Bn
+        boot_b[i] <- temp_result$b
         if (i%%10 == 0) {
           print(paste0("Done with ", i, " bootstraps ", Sys.time()))
         }
       }
-      results <- list("results" = result1,
-                      "booted_e" = result2)
+      results <- list("e" = result1$e,
+                      "Bn" = results1$Bn,
+                      "b" = results1$b,
+                      "data" = results1$data,
+                      "booted_e" = boot_e,
+                      "booted_Bn" = boot_Bn,
+                      "booted_b" = boot_b )
       return(results)
     } else {
       return(result1)
     }
   }
 
-  # if notch is greater than zero
+  # if notch is greater than zero (notch)
   if (Tax > 0) {
     result1 <- notch_estimator(earnings, zstar, t1, t2, Tax,
                                cf_start, cf_end,
@@ -186,23 +196,32 @@ bunchr <- function(earnings, zstar, t1, t2, Tax = 0,
                                binw, poly_size,
                                convergence, max_iter, select, draw)
     if (nboots > 0) {
-      result2 <- rep(NA, nboots)
+      boot_e <- rep(NA, nboots)
+      boot_Bn <- rep(NA, nboots)
+      boot_dz <- rep(NA, nboots)
       if (!is.na(seed)) {
         set.seed(seed)
       }
       for (i in 1:nboots) {
         temp_pop <- sample(earnings,population,replace = TRUE)
-        result2[i] <- notch_estimator(temp_pop, zstar, t1, t2, Tax,
+        temp_result <- notch_estimator(temp_pop, zstar, t1, t2, Tax,
                                       cf_start, cf_end,
                                       exclude_before, exclude_after, binw,
                                       poly_size, convergence, max_iter, select,
-                                      draw = FALSE)$e
+                                      draw = FALSE)
+        boot_e[i] <- temp_result$e
+        boot_Bn[i] <- temp_result$Bn
+        boot_dz[i] <- temp_result$notch_size
         if (i%%10 == 0) {
           print(paste0("Done with ", i, " bootstraps ", Sys.time()))
         }
       }
-      results <- list("results" = result1,
-                      "booted_e" = result2)
+      results <- list("e" = result1$e,
+                      "Bn" = result1$Bn,
+                      "notch_size" = result1$notch_size,
+                      "booted_e" = boot_e,
+                      "booted_Bn" = boot_Bn,
+                      "booted_notch_size" = boot_dz )
       return(results)
     } else {
       return(result1)
