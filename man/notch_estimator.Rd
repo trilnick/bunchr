@@ -52,7 +52,7 @@ histogram? See details.}
   \item{\code{Bn}}{The sum of total estimated extra bunching in the area starting
   at cf_start and through the notch bin (zstar) }
   \item{\code{notch_size}}{Distance between notch bin and bin where the estimated
-  influece of the notch ends, $\Delta z^*$}
+  influece of the notch ends, delta_zed}
   \item{\code{data}}{A data frame with bin mids, counts, counter-factual
   counts, and excluded dummy}
 }
