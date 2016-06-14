@@ -167,7 +167,6 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
     reg_data$extra <- reg_data$counts *
       as.numeric(reg_data$mid > zstar + exclude_after * binw) *
       old_B /
-      #sum(reg_data$counts[reg_data$mid > zstar + exclude_after * binw])
       sum(bunch_hist$counts[bunch_hist$mids > zstar + exclude_after * binw])
     #
     # Iterative process
@@ -181,7 +180,6 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
         reg_data$extra <- reg_data$counts *
           as.numeric(reg_data$mid > zstar + exclude_after * binw) *
           old_B /
-          #sum(reg_data$counts[reg_data$mid > zstar + exclude_after * binw])
           sum(bunch_hist$counts[bunch_hist$mids > zstar + exclude_after * binw])
       }
       # run regression
@@ -194,9 +192,9 @@ kink_estimator <- function(earnings, zstar,  t1, t2,
 
       } else {temp_reg <- full}
       # update bunching estimator
+      new_B <- sum((temp_reg)$coefficients[2:(length(excluded_list) + 1)])
       # adding this now: updating cf_counts
       reg_data$cf_counts <- stats::predict(temp_reg,cbind(reg_data[,c(1,2)],cheat_excluded))
-      new_B <- sum((temp_reg)$coefficients[2:(length(excluded_list) + 1)])
       # update counter
       counter <- counter + 1
     }
