@@ -3,14 +3,7 @@
 * ubuntu 12.04.5 (on travis-ci), R 3.3.0
 
 ## R CMD check results
-There were no ERRORs or WARNINGs.
-
-There was 1 NOTE:
-
-* checking for unstated dependencies in vignettes ... NOTE
-'::' or ':::' import not declared from: 'devtools'
-
- This should not be a problem
+There were no ERRORs, WARNINGs, or NOTEs.
 
 ## Downstream dependencies
 This is the first version of this package, so there can't be.
