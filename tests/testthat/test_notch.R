@@ -10,13 +10,13 @@ ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.1, 200, 1000)
 
 test_that("cf and excluded area", {
-  # Tax = 0, should not happen when using with bunchr
+  # Tax = 0, should not happen when using with bunch
   expect_warning(notch_estimator(earning_vec[1:1000], zstar = 1000,  t1 = 0.1,
                                 t2 = 0.1, Tax = 0,
                                 cf_start =  50, cf_end = 80,
                                 exclude_before = 2, exclude_after = 60, binw = 10,
                                 poly_size = 7, convergence = 0.01, max_iter = 100,
-                                select = F,draw = F),
+                                select = F, draw = F),
                  "Input for notch is zero")
   # no cf_start
   expect_warning(notch_estimator(earning_vec[1:1000], zstar = 1000,  t1 = 0.1,
@@ -53,7 +53,7 @@ test_that("cf and excluded area", {
 })
 
 # testing if it seems to work
-estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
                          cf_start = 50, cf_end = 100,
                          exclude_before = 2, exclude_after = 50, binw = 10,
                          select = T, draw = F,
@@ -74,7 +74,7 @@ test_that("it actually works", {
 earning_vec <- sapply(ability_vec, earning_fun, 0, 0.1, 0.1, 200, 1000)
 #bunch_viewer(earning_vec, zstar = 1000, cf_start = 50, cf_end = 100,
 #             exclude_after=30, binw=10)
-estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
                 cf_start = 50, cf_end = 100,
                 exclude_before = 2, exclude_after = 30, binw = 10,
                 select = T, draw = F,
@@ -88,9 +88,9 @@ test_that("it actually works", {
 
 # test #3 - very little cf on the left side
 earning_vec <- sapply(ability_vec, earning_fun, 0.3, 0.1, 0.1, 200, 1000)
-bunch_viewer(earning_vec, zstar = 1000, cf_start = 50, cf_end = 60,
-            exclude_after = 55, binw=10)
-estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
+#bunch_viewer(earning_vec, zstar = 1000, cf_start = 50, cf_end = 60,
+#            exclude_after = 55, binw=10)
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
                 cf_start = 50, cf_end = 60,
                 exclude_before = 2, exclude_after = 55, binw = 10,
                 select = T, draw = F,
@@ -106,9 +106,9 @@ test_that("it actually works", {
 ability_vec <- 1500*runif(100000,0,2)
 earning_vec <- sapply(ability_vec, earning_fun, elas = 0.3, t1 = 0.1, t2 = 0.2,
                       Tax = 100, zstar = 1200)
-bunch_viewer(earning_vec, zstar = 1200, cf_start = 25, cf_end = 40,
-             exclude_after = 22, binw = 20)
-estim <- bunchr(earning_vec, zstar = 1200, t1 = 0.1, t2 = 0.2, Tax = 100,
+#bunch_viewer(earning_vec, zstar = 1200, cf_start = 25, cf_end = 40,
+#             exclude_after = 22, binw = 20)
+estim <- bunch(earning_vec, zstar = 1200, t1 = 0.1, t2 = 0.2, Tax = 100,
                 cf_start = 25, cf_end = 40,
                 exclude_before = 2, exclude_after = 22, binw = 20,
                 select = T, draw = F,
@@ -132,12 +132,12 @@ earning_vec <- rep(NA, num)
 for ( i in 1:num) {
   earning_vec[i] <- earning_fun(ability_vec[i], elas_vec[i], 0.2, 0.2, 200, 1000)
 }
-bunch_viewer(earning_vec, zstar = 1000, cf_start = 30, cf_end = 70,
-             exclude_after = 30, binw = 20)
-estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.2, t2 = 0.2, Tax = 200,
+#bunch_viewer(earning_vec, zstar = 1000, cf_start = 30, cf_end = 70,
+#             exclude_after = 30, binw = 20)
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0.2, t2 = 0.2, Tax = 200,
                 cf_start = 30, cf_end = 70,
                 exclude_before = 2, exclude_after = 30, binw = 20,
-                select = T, draw = T,
+                select = T, draw = F,
                 nboots = 100, seed = 2016)
 quantile(estim$booted_e, probs = c(0,0.05,0.1,0.25,0.5,0.75,0.9,0.95,1))
 median_e <- median(estim$booted_e)

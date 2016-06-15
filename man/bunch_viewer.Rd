@@ -46,6 +46,6 @@ bunch_viewer(earning_vec, 1000, 20, 40, 2, 2, 20, TRUE, FALSE)
 
 }
 \seealso{
-\code{\link{bunchr}}
+\code{\link{bunch}}
 }
 

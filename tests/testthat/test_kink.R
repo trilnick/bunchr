@@ -10,7 +10,7 @@ ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0, 0.2, 0, 1000)
 
 test_that("cf and excluded area", {
-  #cf and excluded areas - should not happen when using bunchr
+  #cf and excluded areas - should not happen when using bunch
   expect_warning(kink_estimator(earning_vec[1:1000], zstar = 1000,  t1 = 0, t2 = 0.1,
                                 cf_end =  10,
                                 exclude_before = 2, exclude_after = 2, binw = 10,
@@ -26,12 +26,12 @@ test_that("cf and excluded area", {
 })
 
 test_that("equal tax rates", {
-  expect_error(bunchr(earning_vec, t1 = 0, t2 = 0, Tax = 0,
+  expect_error(bunch(earning_vec, t1 = 0, t2 = 0, Tax = 0,
                       cf_start = 10, cf_end = 10,
-                      exclude_before = 2, exclude_after = 2, binw = 50),
+                      exclude_before = 2, exclude_after = 2, binw = 50 , draw = F),
                "No change in marginal tax rate - can't calculate elasticity!")
 
-  expect_error(bunchr(earning_vec, zstar = 1000, t1 = 0.2, t2 = 0.1, Tax = 0,
+  expect_error(bunch(earning_vec, zstar = 1000, t1 = 0.2, t2 = 0.1, Tax = 0,
                         cf_start = 10, cf_end = 10,
                         exclude_before = 1, exclude_after = 1, binw = 50,
                         correct = T, select = F, draw=F),
@@ -40,7 +40,7 @@ test_that("equal tax rates", {
 })
 
 # testing if it seems to work #1
-estim <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0,
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0,
                          cf_start = 50, cf_end = 50,
                          exclude_before = 0, exclude_after = 0, binw = 5,
                          correct = T, select = T, draw=F,
@@ -59,7 +59,7 @@ test_that("it actually works", {
 # testing if this works #2: complete inelastic
 earning_vec <- sapply(ability_vec, earning_fun, elas = 0, t1 = 0, t2 = 0.2,
                       Tax = 0, zstar = 500)
-estim <- bunchr(earning_vec, zstar = 500, t1 = 0, t2 = 0.2, Tax = 0,
+estim <- bunch(earning_vec, zstar = 500, t1 = 0, t2 = 0.2, Tax = 0,
                 cf_start = 20, cf_end = 20,
                 exclude_before = 0, exclude_after = 0, binw = 20,
                 correct = T, select = T, draw=F,
@@ -75,7 +75,7 @@ test_that("elasticity estimate is zero", {
 ability_vec <- 1500*runif(100000,0,2)
 earning_vec <- sapply(ability_vec, earning_fun, elas = 0.3, t1 = 0.3, t2 = 0.4,
                       Tax = 0, zstar = 1200)
-estim <- bunchr(earning_vec, zstar = 1200, t1 = 0.3, t2 = 0.4, Tax = 0,
+estim <- bunch(earning_vec, zstar = 1200, t1 = 0.3, t2 = 0.4, Tax = 0,
                 cf_start = 50, cf_end = 50,
                 exclude_before = 1, exclude_after = 1, binw = 10,
                 correct = T, select = T, draw=F,
@@ -87,7 +87,7 @@ test_that("elasticity estimate is zero", {
 })
 
 # testing if this works #4: same story as #3, wrong zstar in analysis
-estim <- bunchr(earning_vec, zstar = 1000, t1 = 0.3, t2 = 0.4, Tax = 0,
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0.3, t2 = 0.4, Tax = 0,
                 cf_start = 50, cf_end = 50,
                 exclude_before = 1, exclude_after = 1, binw = 10,
                 correct = T, select = T, draw=F,
@@ -99,10 +99,10 @@ test_that("elasticity estimate is zero", {
 })
 
 # testing if this works #5: robustness check (larger bins, larger excluded area)
-estim <- bunchr(earning_vec, zstar = 1200, t1 = 0.3, t2 = 0.4, Tax = 0,
+estim <- bunch(earning_vec, zstar = 1200, t1 = 0.3, t2 = 0.4, Tax = 0,
                 cf_start = 20, cf_end = 20,
                 exclude_before = 3, exclude_after = 3, binw = 50,
-                correct = T, select = T, draw=T,
+                correct = T, select = T, draw = F,
                 nboots = 100, seed = 2016)
 median_e <- median(estim$booted_e)
 test_that("elasticity estimate is zero", {
@@ -111,7 +111,7 @@ test_that("elasticity estimate is zero", {
 })
 
 # testing if this works #5: robustness check (larger bins, larger excluded area)
-estim <- bunchr(earning_vec, zstar = 1200, t1 = 0.3, t2 = 0.4, Tax = 0,
+estim <- bunch(earning_vec, zstar = 1200, t1 = 0.3, t2 = 0.4, Tax = 0,
                 cf_start = 20, cf_end = 20,
                 exclude_before = 3, exclude_after = 3, binw = 50,
                 correct = T, select = T, draw = F,
@@ -125,7 +125,7 @@ test_that("elasticity estimate is zero", {
 # more tests #6: really strong bunching, large delta t
 ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0, 0.5, 0, 1000)
-estim <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.5, Tax = 0,
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.5, Tax = 0,
                 cf_start = 20, cf_end = 20,
                 exclude_before = 1, exclude_after = 1, binw = 10,
                 correct = T, select = T, draw = F,
@@ -147,10 +147,10 @@ earning_vec <- rep(NA, num)
 for ( i in 1:num) {
   earning_vec[i] <- earning_fun(ability_vec[i], elas_vec[i], 0, 0.2, 0, 1000)
 }
-estim <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0,
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0,
                 cf_start = 20, cf_end = 20,
                 exclude_before = 1, exclude_after = 1, binw = 10,
-                correct = T, select = T, draw = T,
+                correct = T, select = T, draw = F,
                 nboots = 100, seed = 2016)
 median_e <- median(estim$booted_e)
 test_that("elasticity estimate is zero", {

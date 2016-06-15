@@ -2,7 +2,7 @@
 #'
 #' Given a kinked budget set, this function gets a vector of earnings and
 #' analyzes bunching. This function could be run independently, but best used
-#' through the \code{bunchr} function.
+#' through the \code{bunch} function.
 #'
 #' @param earnings Vector of earnings, hopefully a very large one
 #' @param zstar Place of kink (critical earning point)
@@ -54,7 +54,7 @@
 #' @references Kleven, H J (2016). \emph{Bunching}, Annual Review of Economics,
 #' 8(1).
 #'
-#' @seealso \code{\link{bunchr}}, \code{\link{kink_estimator}}
+#' @seealso \code{\link{bunch}}, \code{\link{kink_estimator}}
 #'
 #' @examples
 #' ability_vec <- 4000 * rbeta(100000, 2, 5)
@@ -74,7 +74,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
                             max_iter = 100, select = TRUE,draw = FALSE) {
   ## ---------------------------------------------------------------------------
   ## Error handling
-  if (Tax == 0) {                      # this shouldn't happen when using bunchr
+  if (Tax == 0) {                      # this shouldn't happen when using bunch
     warning("Input for notch is zero")
   }
   if (is.na(cf_start)) {

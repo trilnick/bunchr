@@ -14,7 +14,7 @@
 #' under a kink or notch.
 #' @return Optimal earning level.
 #'
-#' @seealso \code{\link{util_calc}}, \code{\link{bunchr}}
+#' @seealso \code{\link{util_calc}}, \code{\link{bunch}}
 #'
 #' @examples
 #' earning_fun(1200,0.2,0.1,0.3,100,1000)

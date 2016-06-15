@@ -47,9 +47,9 @@ to a higher tax rate once earnings exceed the threshold.
 
 ## What can you do with `bunchr`?
 
-The `bunchr` package can be used to visualize bunching and estimate the elasticity
-of earnings w.r.t. marginal tax rates, as usually done in the literature cited
-above. There is also a function to simulate earnings given certain parameters.
+The `bunchr` package can be used to visualize bunching and estimate the compensated
+elasticity of earnings w.r.t. marginal tax rates, as usually done in the literature
+cited above. There is also a function to simulate earnings given certain parameters.
 `bunchr`'s language is of earnings and elasticities of earnings, but can be used
 for other suitable bunching analysis.
 
@@ -114,7 +114,7 @@ of earnings. We can use the same specification as we did while viewing. Note tha
 in order to calculate the elasticity, we must provide the marginal tax rates!
 
 ```{r first_kink}
-kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 10, cf_end = 10,
                    exclude_before = 2, exclude_after = 2, binw = 50, nboots = 100)
 kink_est$e
@@ -133,7 +133,7 @@ does shrink the confidence intervals, and gives a point estimate closer to
 the value we used to generate the data. 
 
 ```{r second_kink2}
-kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 500, cf_end = 500,
                    exclude_before = 10, exclude_after = 10, binw = 1,
                    nboots = 100, seed = 123, draw = F)
@@ -179,7 +179,7 @@ searching for the end of the notch.
 ```{r notch1}
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.1, 200, 1000)
 bunch_viewer(earning_vec, 1000, 20, 50, 2, 25, binw = 20)
-notch_est <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
+notch_est <- bunch(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 2, exclude_after = 25, binw = 20,
                    nboots = 100, seed = 123)
@@ -219,7 +219,7 @@ vector: 10,000 observations in total. The confidence interval is quite large.
 ```{r size_small }
 ability_vec_small <- 4000 * rbeta(10000, 2, 5)
 earnings_small <- sapply(ability_vec_small, earning_fun, 0.2, 0, 0.1, 0, 1000)
-kink_est <- bunchr(earnings_small, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+kink_est <- bunch(earnings_small, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 10, cf_end = 10,
                    exclude_before = 1, exclude_after = 1, binw = 50,
                     nboots = 100, seed = 123)
@@ -233,7 +233,7 @@ population, we could reliably narrow the bins and get a more accurate estimate.
 ```{r size_large }
 ability_vec_large <- 4000 * rbeta(1000000, 2, 5)
 earnings_large <- sapply(ability_vec_large, earning_fun, 0.2, 0, 0.1, 0, 1000)
-kink_est <- bunchr(earnings_large, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+kink_est <- bunch(earnings_large, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 5, exclude_after = 5, binw = 10,
                    nboots = 100, seed = 123)
@@ -245,7 +245,7 @@ Note that, with a larger population, we could reliably narrow the bins and get
 a more accurate estimate. Using only 10 bins before and after the bunching bin:
 
 ```{r size_large2}
-kink_est <- bunchr(earnings_large, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+kink_est <- bunch(earnings_large, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 1, exclude_after = 1, binw = 5,
                    nboots = 100, seed = 123, draw = F)
@@ -261,12 +261,12 @@ is worthwhile to see what happens if, by mistake, we wrongly specify the earning
 or elasticity.
 
 We can simulate an earning vector with no bunching and see the estimates, and
-run `bunchr` on it.
+run `bunch` on it.
 
 ```{r error1}
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.1, 0, 1000)
 bunch_viewer(earning_vec, 1000, 10, 10, 1, 1, binw = 50, trimy=F)
-kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 0,
+kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 1, exclude_after = 1, binw = 10,
                    nboots = 100, seed = 123, draw = F)
@@ -276,12 +276,12 @@ Woops! Can't do this. The formula for elasticity includes the logarithm of the
 proportion of net-of-tax rates before and after the kink. Setting them equal
 generates a NaN, as the zeroed logarithm term is in the denominator.
 
-But let's see what `bunchr` does when we try to estimate a marginal tax rate
+But let's see what `bunch` does when we try to estimate a marginal tax rate
 change, when in fact there was no change. Presumably, as there is no visible
 bunching, the estimates would be zero. Indeed:
 
 ```{r error2}
-kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 1, exclude_after = 1, binw = 10,
                    nboots = 100, seed = 123, draw = F)
@@ -290,17 +290,17 @@ quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
 
 What would happen if bunching does occur, but we did not specify the tax rates
-correctly when running `bunchr`? Let's create an earnings vector with a tax rate
-change from 0% to 30%, but run `bunchr` for a smaller tax change, 0% to 20%. As
+correctly when running `bunch`? Let's create an earnings vector with a tax rate
+change from 0% to 30%, but run `bunch` for a smaller tax change, 0% to 20%. As
 the observed bunching is higher than what would be expected for a change from 0%
-to 20% with elasticity of 0.2, `bunchr` estimates a higher elasticity of earnings.
+to 20% with elasticity of 0.2, `bunch` estimates a higher elasticity of earnings.
 This kind of user-induced error cannot be detected, so make sure to input the
 parameters correctly.
 
 ```{r error3}
 earning_vec <- sapply(ability_vec, earning_fun, elas = 0.2, t1 = 0, t2 = 0.3,
                       Tax = 0, zstar = 1000)
-kink_est <- bunchr(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0,
+kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 1, exclude_after = 1, binw = 10,
                    nboots = 100, seed = 123, draw = F)
@@ -359,15 +359,15 @@ chetty_res <- read.csv(file = path)
 chetty_res <- chetty_res[order(chetty_res$earnings), ]
 ``` 
 
-Now, we can run `bunchr` on the data. I use the same specification regarding
+Now, we can run `bunch` on the data. I use the same specification regarding
 the bin width, counter-factual area, excluded area, and correcting for shift on
-the right side of the notch. The main difference is that, since `bunchr` calculates
+the right side of the notch. The main difference is that, since `bunch` calculates
 the estimated elasticity, it needs the marginal tax rates as inputs (this will not
 matter for the counter-factual estimation). Also note that I shut down the default option for model selection for the counter-factual (mostly useful for notches, 
 and non-existing in `bunch_count`), and use the default 7th degree polynomial.
 
 ``` {r chetty4, eval=TRUE}
-estim <- bunchr(earning_vec, 1000, 0, 0.2, 0, 10, 10, 1, 1, 50, max_iter = 200, correct = T, select = F, poly_size = 7, draw = F)
+estim <- bunch(earning_vec, 1000, 0, 0.2, 0, 10, 10, 1, 1, 50, max_iter = 200, correct = T, select = F, poly_size = 7, draw = F)
 # creating comparison data-frame
 bunchr_res <- estim$data
 comp_data <- cbind(bunchr_res, chetty_res)

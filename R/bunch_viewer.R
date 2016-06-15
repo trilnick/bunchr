@@ -20,7 +20,7 @@
 #'
 #' @return A plot, the actual histogram if report is set to TRUE.
 #'
-#' @seealso \code{\link{bunchr}}
+#' @seealso \code{\link{bunch}}
 #'
 #' @examples
 #' ability_vec <- 4000 * rbeta(100000, 2, 5)

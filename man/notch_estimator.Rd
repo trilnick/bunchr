@@ -60,7 +60,7 @@ histogram? See details.}
 \description{
 Given a kinked budget set, this function gets a vector of earnings and
 analyzes bunching. This function could be run independently, but best used
-through the \code{bunchr} function.
+through the \code{bunch} function.
 }
 \details{
 A histogram is created from the earnings vector, with the kink
@@ -87,6 +87,6 @@ Kleven, H J (2016). \emph{Bunching}, Annual Review of Economics,
 8(1).
 }
 \seealso{
-\code{\link{bunchr}}, \code{\link{kink_estimator}}
+\code{\link{bunch}}, \code{\link{kink_estimator}}
 }
 
