@@ -16,7 +16,7 @@ knitr::opts_chunk$set( fig.width = 7, fig.height = 4,
                       warning = TRUE,
                       error = TRUE )
 #knitr::opts_knit$set(root.dir = "C:\\Users\\User\\Box Sync\\btl\\bunching\\bunchr\\inst\\compare")
-#
+
 ```
 
 A growing literature in empirical economics is focused around bunching. Loosely
@@ -36,7 +36,7 @@ explored. First, where budget sets suddenly change slopes, creating a point wher
 budget sets are non-differentiable. These "kinks" in budget sets have been explored
 in the case of Earned Income Tax Credits in the US^[Saez, E. (2010). _"Do taxpayers
 bunch at kink points?"_] and income tax rates in Denmark^[Chetty, R., Friedman, J.,
-Olsen, T., Pistaferri, L. (2009). _"Adjustment Costs, Firm Responses, and Micro
+Olsen, T., Pistaferri, L. (2011). _"Adjustment Costs, Firm Responses, and Micro
 vs. Macro Labor Supply Elasticities: Evidence from Danish Tax Records"_,
 Quarterly Journal of Economics, 126(2).]. The second type are notches, where
 a policy sets a discontinuity in the budget set. For example, bunching in earnings
@@ -313,17 +313,19 @@ quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ## Comparison with Existing Packages
 
 To my knowledge, no _R_ package is publically available for bunching analysis.
-Chetty _et al_ (2011) did distribute their _STATA_ code, which was used for
+Chetty _et al_ (2011) did distribute their _Stata_ code, which was used for
 kink analysis, and I will use it to validate _bunchr_. Unfortunately, I cannot
 use it with the original administrative data. However, I can run a simulation 
-and test for similarity in results. The _STATA_ package was written by Tore Olsen,
+and test for similarity in results. The _Stata_ package was written by Tore Olsen,
 and can be found in Raj Chetty's website. I do not include it with `bunchr` as I
 am not sure if its copyright status allows it. To replicate these results, you
-will need to download and install the `bunch_count` package for _STATA_, and 
+will need to download and install the `bunch_count` function for _Stata_, and 
 of course define the working directories properly.
 
-First, I create a dataset with `bunchr`. The _STATA_ package required collapsed,
-binned data. I use `bunch_viewer` to create and export that.
+First, I create a dataset with `bunchr`. The _Stata_ package required collapsed,
+binned data. I use `bunch_viewer` to create and export that. Note that 
+`bunch_viewer` will create the histogram by placing the kink point in the middle
+of a bin.
 
 ``` {r chetty1, eval=TRUE}
 set.seed(1982)
@@ -335,7 +337,7 @@ colnames(sim_data) = c("earnings","counts")
 write.csv(sim_data, file="sim_data.csv", row.names = F)
 ```
 
-Now, run the code in _STATA_:
+Now, run the code in _Stata_:
 
 ``` {r chetty2, eval=FALSE}
 insheet using "sim_data.csv", clear
