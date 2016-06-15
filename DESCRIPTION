@@ -1,7 +1,7 @@
 Package: bunchr
 Type: Package
 Title: Analyze bunching in a kink or notch setting
-Version: 0.0.1.0
+Version: 0.1.0
 Author: person("Itai", "Trilnick", email = "itai.trilnick@berkeley.edu",
     role = c("aut", "cre"))
 Maintainer: Itai Trilnick <itai.trilnick@berkeley.edu>
@@ -14,6 +14,7 @@ BugReports: http://github.com/trilnick/bunchr/issues
 License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 5.0.1
+Depends: R (>= 3.2.4)
 Imports: stats, graphics
 Suggests: knitr,
     rmarkdown,
