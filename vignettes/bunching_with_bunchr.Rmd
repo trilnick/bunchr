@@ -9,14 +9,15 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r settings, include=FALSE, echo=FALSE}
+```{r settings, include=TRUE, echo=TRUE}
 library(bunchr)
 knitr::opts_chunk$set( fig.width = 7, fig.height = 4,
                       warning = TRUE,
                       error = TRUE )
+path = file.path(system.file("extdata", "compare_results.csv", package = "bunchr"))
 ```
 
-A growing literature in empirical economics is focused around bunching. Loosely
+A growing literature in empirical economcs is focused around bunching. Loosely
 speaking, bunching occurs when many people self select to a very specific location
 in the range of some variable. When this happens, a histogram of this variable might
 show a visible "bunch" - a large mass that would not be otherwise predicted by the
@@ -319,10 +320,10 @@ am not sure if its copyright status allows it. To replicate these results, you
 will need to download and install the `bunch_count` function for _Stata_, and 
 of course define the working directories properly.
 
-First, I create a dataset with `bunchr`. The _Stata_ package required collapsed,
+First, I create a dataset with `bunchr`. The _Stata_ function required collapsed,
 binned data. I use `bunch_viewer` to create and export that. Note that 
 `bunch_viewer` will create the histogram by placing the kink point in the middle
-of a bin.
+of a bin. 
 
 ``` {r chetty1, eval=TRUE}
 set.seed(1982)
@@ -331,12 +332,18 @@ earning_vec <- sapply(ability_vec, earning_fun, 0.3, 0, 0.2, 0, 1000)
 data <- bunch_viewer(earning_vec, 1000, binw=50, report = T)
 sim_data <- data.frame(cbind(data$mids,data$counts))
 colnames(sim_data) = c("earnings","counts")
+```
+
+Now, save the simulated earning histogram in comma delimited format, which is 
+easy to read in _Stata_:
+
+``` {r chetty2, eval=FALSE}
 write.csv(sim_data, file="sim_data.csv", row.names = F)
 ```
 
 Now, run the code in _Stata_:
 
-``` {r chetty2, eval=FALSE}
+``` {r chetty2.1, eval=FALSE}
 insheet using "sim_data.csv", clear
 bunch_count earnings counts, bpoint(1000) ig_low(-10) ig_high(10) low_bunch(-1) high_bunch(1) plot(1) binwidth(50)
 outsheet using "compare_results.csv", replace delim(",")
@@ -348,7 +355,7 @@ data will be exported as a .csv file which we will import back to _R_.
 
 
 ``` {r chetty3, eval=TRUE}
-chetty_res <- read.csv(file="compare_results.csv")
+chetty_res <- read.csv(file = path)
 chetty_res <- chetty_res[order(chetty_res$earnings), ]
 ``` 
 
@@ -372,7 +379,7 @@ colnames(show_data) <- c("earnings", "counts",
   "bunchr_cf_counts", "bunchcount_cf_counts", "diff",
   "percent_diff")
 
-write.csv(show_data, file="show_data.csv", row.names=F)
+# write.csv(show_data, file="show_data.csv", row.names=F)
 
 # plot the results
 plot(show_data$earnings, show_data$counts, type="h",
@@ -386,6 +393,6 @@ legend("topleft", lty=c(1, NA, NA), pch=c(NA, "*","*" ), col=c("black","red","bl
 ```
 
 _sim\_data_.csv, _compare\_results.csv_ and _show\_data.csv_ are available in the
-_compare_ folder of `bunchr`.
+_exdata_ folder of the installation.
 
 
