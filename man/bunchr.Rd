@@ -26,6 +26,6 @@ the net-of-tax rate.
 }
 }
 \seealso{
-\code{\link{bunch}}, \code{\link{bunch_biewer}}
+\code{\link{bunch}}, \code{\link{bunch_viewer}}
 }
 
