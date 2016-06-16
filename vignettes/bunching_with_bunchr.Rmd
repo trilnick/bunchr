@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r settings, include=TRUE, echo=TRUE}
+```{r settings, include = FALSE, echo = FALSE}
 library(bunchr)
 knitr::opts_chunk$set( fig.width = 7, fig.height = 4,
                       warning = TRUE,
@@ -393,6 +393,6 @@ legend("topleft", lty=c(1, NA, NA), pch=c(NA, "*","*" ), col=c("black","red","bl
 ```
 
 _sim\_data_.csv, _compare\_results.csv_ and _show\_data.csv_ are available in the
-_exdata_ folder of the installation.
+_extdata_ folder of the installation.
 
 
