@@ -18,7 +18,7 @@
 #'  counts.}
 #' }
 #'
-#' @seealso \code{\link{bunch}}, \code{\link{bunch_biewer}}
+#' @seealso \code{\link{bunch}}, \code{\link{bunch_viewer}}
 #'
 #' @docType package
 #' @name bunchr
