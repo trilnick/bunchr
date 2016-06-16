@@ -1,5 +1,5 @@
 ## Test environments
-* local OS Windows 10, R R version 3.2.4 Revised
+* local OS Windows 10, R version 3.3.0
 * ubuntu 12.04.5 (on travis-ci), R 3.3.0
 
 ## R CMD check results
