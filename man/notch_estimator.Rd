@@ -78,8 +78,9 @@ explanatory model using the Akaike information criterion.
 \examples{
 ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.2, 0.2, 500, 1000)
-# bunch_viewer(earning_vec, 1000, 60, 150, 2, 100, binw = 10)
-notch_estimator(earning_vec, 1000, 0.2, 0.2, 500, 60, 150, 2, 100, 10, draw = FALSE)
+bunch_viewer(earning_vec, 1000, 15, 30, 2, 21, binw = 50)
+notch_estimator(earning_vec, 1000, 0.2, 0.2, 500, 15, 30, 2, 21, 50,
+draw = FALSE)$e
 
 }
 \references{
