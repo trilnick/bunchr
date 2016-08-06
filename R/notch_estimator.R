@@ -15,6 +15,9 @@
 #' histogram should start.
 #' @param exclude_before Number of excluded bins before the kink bin.
 #' @param exclude_after Number of excluded bins after the kink bin.
+#' @param force_after Should \code{bunch} be forced to use of the provided
+#' \emph{exclude_after} for the end of the bunching, rather than trying to find
+#' the bin where the sum of the integral is zero? See details.
 #' @param binw Bin width.
 #' @param poly_size Order of polynomial used to calculate counter-factual
 #'  histogram.
@@ -35,7 +38,22 @@
 #'
 #' Model selection works using the \code{step} function from the stats package.
 #' It runs backwards from the full polynomial model, trying to find the best
-#' explanatory model using the Akaike information criterion.
+#' explanatory model using the Akaike Information Criterion.
+#'
+#' By default, \code{notch_estimator} will try to find the end of the notch, i.e.
+#' a histogram bin defining a right-side boundary for a range of an excluded area.
+#' An interpolation of the counts inside this range renders an equality between
+#' the sum of the ``excess'' counts, from the left side to the notch point, and
+#' the sum of ``missing'' counts from the notch point to the notch size.
+#' \code{notch_estimator} goes through an iterative process to find a stable
+#' right-side boundary, labels it \emph{notch_size} and returns it. However, the
+#' user might want to force a visibly detectible end of notch, rather than let
+#' \code{notch_estimator} calculate one. Use this option with caution: the notch
+#' size is then used to calculate elasticity. For calculating intensive margin
+#' elasticities, excess bunching must all come from other bins. Thus, total sums
+#' must be equal and forcing the notch size might not be appropriate. In other
+#' settings, e.g. a labor market with extensive margins (entry and exit from
+#' labor force), forcing the notch size might be helpful.
 #'
 #'
 #'
@@ -60,7 +78,7 @@
 #' ability_vec <- 4000 * rbeta(100000, 2, 5)
 #' earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.2, 0.2, 500, 1000)
 #' bunch_viewer(earning_vec, 1000, 15, 30, 2, 21, binw = 50)
-#' notch_estimator(earning_vec, 1000, 0.2, 0.2, 500, 15, 30, 2, 21, 50,
+#' notch_estimator(earning_vec, 1000, 0.2, 0.2, 500, 15, 30, 2, 21, binw = 50,
 #' draw = FALSE)$e
 #'
 #' @export
@@ -70,7 +88,7 @@
 
 notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
                             cf_start = NA, cf_end = NA,
-                            exclude_before = NA, exclude_after = NA,
+                            exclude_before = NA, exclude_after = NA, force_after = FALSE,
                             binw = 10, poly_size = 7, convergence = 0.01,
                             max_iter = 100, select = TRUE,draw = FALSE) {
   ## ---------------------------------------------------------------------------
@@ -89,6 +107,9 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   if (is.na(exclude_before)) {
     exclude_before <- 10
     warning("exclude_before not specified, using 10 bins as default")
+  }
+  if (!is.logical(force_after)) {
+    stop("force_after must be TRUE or FALSE")
   }
 
 
@@ -199,7 +220,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   new_delta_zed <- 0
   counter <- 1
   while (abs(new_delta_zed - delta_zed) / delta_zed > convergence &
-         counter < max_iter) {
+         counter < max_iter & force_after == FALSE) {
 
     if (counter > 1) {
       delta_zed <- new_delta_zed
@@ -253,17 +274,21 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
     counter <- counter+1
   }
 
-
-  if (i >= cf_end) {
-    stop("Something is wrong, try extending CF range to the right.")
+  if (force_after==FALSE) {
+    if (i >= cf_end) {
+      stop("Something is wrong, try extending CF range to the right.")
+    }
   }
 
   # calculating the bunching estimate - for the bunch
-  new_B <- sum(sum(temp_reg$coefficients[2:(2 + exclude_before + 1)]))
+  ifelse(force_after==FALSE,
+         new_B <- sum(sum(temp_reg$coefficients[2:(2 + exclude_before + 1)])),
+         new_B <- naive_B)
 
   # estimated elasticity
   est_e <- stats::optimize(elas_equalizer, c(0, 5), t1, t2, Tax, zstar,
                     delta_zed, binw)$minimum
+
   iterations <- counter
   #
   # drawing

@@ -11,7 +11,7 @@ vignette: >
   This vignette is meant to explain how `bunchr` estimates the earning elasticity
 from bunching induced by a notch. These calculations derive the formulas used for
 notch analysis. It closely follows the discussion by Kleven^[Kleven, H.J., 2016.
-  __"Bunching"_, Annual Review of Economics 8(1)].
+  _"Bunching"_, Annual Review of Economics 8(1)].
 
 ## Setup
 The agent faces the following budget line:
