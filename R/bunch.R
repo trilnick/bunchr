@@ -162,6 +162,8 @@ bunch <- function(earnings, zstar, t1, t2, Tax = 0,
       if (!is.na(seed)) {
         set.seed(seed)
       }
+      pb <- txtProgressBar(min = 1, max = nboots, initial = 1, char = "=",
+                           width = 80, style = 3)
       for (i in 1:nboots) {
         temp_pop <- sample(earnings,population,replace=TRUE)
         temp_result <- kink_estimator(temp_pop, zstar, t1, t2, cf_start, cf_end,
@@ -171,10 +173,10 @@ bunch <- function(earnings, zstar, t1, t2, Tax = 0,
         boot_e[i] <- temp_result$e
         boot_Bn[i] <- temp_result$Bn
         boot_b[i] <- temp_result$b
-        if (i%%10 == 0) {
-          print(paste0("Done with ", i, " bootstraps ", Sys.time()))
-        }
+
+        setTxtProgressBar(pb, value = i)
       }
+      close(pb)
       results <- list("e" = result1$e,
                       "Bn" = result1$Bn,
                       "b" = result1$b,
@@ -202,6 +204,8 @@ bunch <- function(earnings, zstar, t1, t2, Tax = 0,
       if (!is.na(seed)) {
         set.seed(seed)
       }
+      pb <- txtProgressBar(min = 1, max = nboots, initial = 1, char = "=",
+                           width = 80, style = 3)
       for (i in 1:nboots) {
         temp_pop <- sample(earnings,population,replace = TRUE)
         temp_result <- notch_estimator(temp_pop, zstar, t1, t2, Tax,
@@ -212,10 +216,11 @@ bunch <- function(earnings, zstar, t1, t2, Tax = 0,
         boot_e[i] <- temp_result$e
         boot_Bn[i] <- temp_result$Bn
         boot_dz[i] <- temp_result$notch_size
-        if (i%%10 == 0) {
-          print(paste0("Done with ", i, " bootstraps ", Sys.time()))
-        }
+
+        setTxtProgressBar(pb, value = i)
+
       }
+      close(pb)
       results <- list("e" = result1$e,
                       "Bn" = result1$Bn,
                       "notch_size" = result1$notch_size,
