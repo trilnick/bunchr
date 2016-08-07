@@ -83,9 +83,9 @@ Let's create an earning distribution for a kinked budget set. First, I create a
 vector of latent abilities, with 100,000 values. Then, I simulate the earnings
 for a situation where everyone's elasticity of earnings w.r.t. marginal tax rate
 is 0.2 (_elas_ = 0.2). The simulation takes into account a kink at earning point of 1000
-(_zstar_ = 1000), at which the marginl tax rate increases from 0% to 10%
+(_zstar_ = 1000), at which the marginal tax rate increases from 0% to 10%
 (_t1_ = 0, _t2_ = 0.1), the notch height is zero (_Tax_ = 0). After creating the
-earning vector, we can view it with `abunch_viewer`.
+earning vector, we can view it with `bunch_viewer`.
 
 As a preparation for further analysis, I can specify where the counter-factual
 distribution be calculates (setting _cf_start_ and _cf_end_), and where the bunching
@@ -314,7 +314,7 @@ To my knowledge, no _R_ package is publically available for bunching analysis.
 Chetty _et al_ (2011) did distribute their _Stata_ code, which was used for
 kink analysis, and I will use it to validate _bunchr_. Unfortunately, I cannot
 use it with the original administrative data. However, I can run a simulation 
-and test for similarity in results. The _Stata_ program was written by Tore Olsen,
+and test for similarity in results. The _Stata_ package was written by Tore Olsen,
 and can be found in Raj Chetty's [website](http:/www.rajchetty.com/chettyfiles/bunch_count.zip).
 To replicate these results, you will need to download and install the `bunch_count`
 function for _Stata_, and of course define the working directories properly.

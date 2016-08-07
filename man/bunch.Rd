@@ -5,9 +5,9 @@
 \title{Bunching Analysis}
 \usage{
 bunch(earnings, zstar, t1, t2, Tax = 0, cf_start = NA, cf_end = NA,
-  exclude_before = NA, exclude_after = NA, binw = 10, poly_size = 7,
-  convergence = 0.01, max_iter = 100, correct = TRUE, select = TRUE,
-  draw = TRUE, nboots = 0, seed = NA)
+  exclude_before = NA, exclude_after = NA, force_after = FALSE,
+  binw = 10, poly_size = 7, convergence = 0.01, max_iter = 100,
+  correct = TRUE, select = TRUE, draw = TRUE, nboots = 0, seed = NA)
 }
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one.}
@@ -29,6 +29,11 @@ histogram should start.}
 \item{exclude_before}{Number of excluded bins before the kink bin.}
 
 \item{exclude_after}{Number of excluded bins after the kink bin.}
+
+\item{force_after}{For notch analysis, should \code{bunch} be forced to use
+of the provided \emph{exclude_after} for the end of the bunching, rather than
+trying to find the bin where the sum of the integral is zero? See details at
+\code{\link{notch_estimator}} documentation.}
 
 \item{binw}{Bin width.}
 
