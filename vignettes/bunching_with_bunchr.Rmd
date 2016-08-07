@@ -17,41 +17,50 @@ knitr::opts_chunk$set( fig.width = 7, fig.height = 4,
 path = file.path(system.file("extdata", "compare_results.csv", package = "bunchr"))
 ```
 
-A growing literature in empirical economcs is focused around bunching. Loosely
-speaking, bunching occurs when many people self select to a very specific location
+A growing literature in empirical economics is focused on bunching. Loosely
+speaking, bunching occurs when many people self select to a specific location
 in the range of some variable. When this happens, a histogram of this variable might
 show a visible "bunch" - a large mass that would not be otherwise predicted by the
-surrounding bins. In words of people smarter than me:
+surrounding bins. This bunching behavior is then interpreted as the response to
+some economic reality. In words of someone smarter than me:
 
   > "This approach uses bunching around points that feature
 discontinuities in incentives to elicit behavioral responses and estimate
 structural parameters." ^[Kleven, H J (2016). _"Bunching"_, Annual Review of
                           Economics, 8(1).]
 
-With the increasing use of administrative data, bunching has been mostly used
-in the public and labor economics. Two main types of bunch-inducing setting are
+With the increasing use of administrative data, bunching has been used mostly
+by public and labor economists. Two main types of bunch-inducing setting are
 explored. First, where budget sets suddenly change slopes, creating a point where
-budget sets are non-differentiable. These "kinks" in budget sets have been explored
-in the case of Earned Income Tax Credits in the US^[Saez, E. (2010). _"Do taxpayers
-bunch at kink points?"_] and income tax rates in Denmark^[Chetty, R., Friedman, J.,
-Olsen, T., Pistaferri, L. (2011). _"Adjustment Costs, Firm Responses, and Micro
-vs. Macro Labor Supply Elasticities: Evidence from Danish Tax Records"_,
-Quarterly Journal of Economics, 126(2).]. The second type are notches, where
-a policy sets a discontinuity in the budget set. For example, bunching in earnings
-of individuals is observed in Pakistan, where the _average_ tax rates, rather than
-the marginal ones, change when earnings cross thresholds^[Kleven, H.J., Waseem,
-M., _"Using notches to uncover optimization frictions and structural elasticities:
-Theory and evidence from Pakistan"_, The Quarterly Journal of Economics, 128(2)].
-This creates a drop in the budget line of individuals, as _all_ earnings are subject
-to a higher tax rate once earnings exceed the threshold.
+budget sets are continuous but non-differentiable. These "kinks" in budget sets 
+have been explored in the case of Earned Income Tax Credits in the 
+US^[Saez, E. (2010). _"Do taxpayers bunch at kink points?"_] and income tax rates
+in Denmark^[Chetty, R., Friedman, J., Olsen, T., Pistaferri, L. (2011). 
+_"Adjustment Costs, Firm Responses, and Micro vs. Macro Labor Supply Elasticities:
+Evidence from Danish Tax Records"_, Quarterly Journal of Economics, 126(2).].
+The second type are notches, where a policy sets a discontinuity in the budget set.
+For example, bunching in earnings of individuals is observed in Pakistan, where
+the _average_ tax rates, rather than the marginal ones, change when earnings cross
+thresholds^[Kleven, H.J., Waseem, M., _"Using notches to uncover optimization
+frictions and structural elasticities: Theory and evidence from Pakistan"_, 
+The Quarterly Journal of Economics, 128(2)]. This creates a drop in the budget
+line of individuals, as _all_ earnings are subject to a higher tax rate once
+earnings exceed the threshold.
+
+When a policy introduces a kink or a notch,  a structural analysis can be used to
+estimate a parameter of interest, such as the elasticity of earnings with respect
+to marginal tax rates. To do this, a specific function must be assumed for the
+agents. In many cases, a convenient function for analysis is quasi-linear and
+iso-elastic.
 
 ## What can you do with `bunchr`?
 
-The `bunchr` package can be used to visualize bunching and estimate the compensated
-elasticity of earnings w.r.t. marginal tax rates, as usually done in the literature
-cited above. There is also a function to simulate earnings given certain parameters.
-`bunchr`'s language is of earnings and elasticities of earnings, but can be used
-for other suitable bunching analysis.
+The `bunchr` package can be used to visualize bunching, calculate counter-factual
+distributions, and estimate the compensated elasticity of earnings w.r.t. marginal
+tax rates, as usually done in the literature cited above. There is also a function
+to simulate earnings given certain parameters. `bunchr`'s language is of earnings
+and elasticities of earnings, but can be used for other suitable bunching analysis.
+Indeed, you can provide a title and x-axis label for the output plots.
 
 Remember that, as usual, more observations are better. Bunching analysis involves
 the creation of a histogram, similar to a density curve. The narrower the bins
@@ -77,34 +86,37 @@ the results of analysis with varying bin widths.
 All you need is a vector of earnings. Using `bunch_viewer`, you can see how a
 histogram of your data looks like. Additionally, you can see where you could
 potentially set some of the parameters for analysis. And, you can save the 
-histogram in a convenient data frame structure with bin mids and counts.
+histogram as an _R_ histogram object.
 
 Let's create an earning distribution for a kinked budget set. First, I create a
 vector of latent abilities, with 100,000 values. Then, I simulate the earnings
 for a situation where everyone's elasticity of earnings w.r.t. marginal tax rate
-is 0.2 (_elas_ = 0.2). The simulation takes into account a kink at earning point of 1000
-(_zstar_ = 1000), at which the marginl tax rate increases from 0% to 10%
+is 0.2 (_elas_ = 0.2). The simulationincludes a kink at the earning point of 1000
+(_zstar_ = 1000), where the marginal tax rate increases from 0% to 10%
 (_t1_ = 0, _t2_ = 0.1), the notch height is zero (_Tax_ = 0). After creating the
-earning vector, we can view it with `abunch_viewer`.
+earning vector, we can view it with `bunch_viewer`.
 
 As a preparation for further analysis, I can specify where the counter-factual
-distribution be calculates (setting _cf_start_ and _cf_end_), and where the bunching
-is (_exclude_before_ and _exclude_after_) relative to the place of the notch. Note
-that these are stated in number of bins. The wider the bins, the greater the
-distances from the kink! That's where `bunch_viewer` comes handy.
+distribution will be calculated (setting _cf\_start_ and _cf\_end_), and where
+the bunching seems to be (_exclude\_before_ and _exclude\_after_) relative to
+the place of the notch. Note that these are stated in number of bins. The wider
+the bins, the greater the distances from the kink! That's where `bunch_viewer`
+comes handy.
 
 In this case, one can observe the whole bunching bin and the rest of the
 distribution quite well. In other cases, specially notches (where bunching is
 more substantial), the height of the bunching bin can be so high that, in order
 to include it in the graph, the rest of the distribution can hardly be seen.
 In these cases, I would keep the default option of "trimming" the vertical axis
-by keeping the default options and not specifying _trimy_ = F.
+by keeping the default options and not specifying _trimy_ = F. Also note that
+you can personalize the plot's title and x-axis label. 
 
 ```{r ability_chunk}
 set.seed(42)
 ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0, 0.1, 0, 1000)
-bunch_viewer(earning_vec, 1000, 10,10,2,2, binw = 50, trimy=F)
+bunch_viewer(earning_vec, 1000, cf_start = 10, cf_end = 10, exclude_before = 2,
+             exclude_after = 2, binw = 50, trimy=F)
 ```
 
 ## Analyzing a kink
@@ -128,9 +140,11 @@ That's no so bad, considering that the width of the bins and the excluded area h
 an attenuating effect. We might not be very happy with the bootstrapped 
 confidence interval we got. It's pretty wide, both for the elasticity estimate and
 the amount of bunching. Since the number of observations allows it, and the simulation
-is pretty "clean", we can try this with narrower bins and excluded area. This
-does shrink the confidence intervals, and gives a point estimate closer to 
-the value we used to generate the data. 
+is pretty "clean", we can try this with narrower bins (width 1 instead of 50), 
+and excluded area (same number of bins, but bins are narrower!). This does shrink
+the confidence intervals, and gives a point estimate closer to the value we used
+to generate the data. Also, the plot title and x-axis label can be modified by
+the user. In this case, however, plotting is supressed.
 
 ```{r second_kink2}
 kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
@@ -194,6 +208,12 @@ elasticity estimates will be wrong. In that case, it might be
 useful to change the _exclude\_after_ parameter and see if the plot come out
 better.
 
+Another option is using the _force_after_ option to set the end of the notch
+manually. Howerver, this means that not all bunching comes from inside the notch.
+When using this option, make sure to understand exactly what is the parameter
+you are estimating.
+
+
 Another issue is the counter-factual distribution. For larger notches, the
 interpolation is harder. Remember the interpolation is based on the histogram
 bins outside the excluded area (green lines) but inside the analysis area (red).
@@ -241,7 +261,7 @@ kink_est$e
 quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 ```
 
-Note that, with a larger population, we could reliably narrow the bins and get
+In fact, with a larger population, we could reliably narrow the bins and get
 a more accurate estimate. Using only 10 bins before and after the bunching bin:
 
 ```{r size_large2}
@@ -257,7 +277,7 @@ quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 
 Generally speaking, the estimation strategy in these procedures are likely to
 attenuate, rather than exacerbate, the estimates for elasticity. However, it
-is worthwhile to see what happens if, by mistake, we wrongly specify the earnings
+is worthwhile to see what happens if, by mistake, we specify the wrong earnings
 or elasticity.
 
 We can simulate an earning vector with no bunching and see the estimates, and
@@ -265,7 +285,7 @@ run `bunch` on it.
 
 ```{r error1}
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.1, 0, 1000)
-bunch_viewer(earning_vec, 1000, 10, 10, 1, 1, binw = 50, trimy=F)
+bunch_viewer(earning_vec, 1000, 10, 10, 1, 1, binw = 50, trimy = F)
 kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 1, exclude_after = 1, binw = 10,
@@ -310,16 +330,18 @@ quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 
 ## Comparison with Existing Packages
 
-To my knowledge, no _R_ package is publically available for bunching analysis.
-Chetty _et al_ (2011) did distribute their _Stata_ code, which was used for
-kink analysis, and I will use it to validate _bunchr_. Unfortunately, I cannot
-use it with the original administrative data. However, I can run a simulation 
-and test for similarity in results. The _Stata_ program was written by Tore Olsen,
+To my knowledge, no other _R_ package for bunching analysis is publically available
+at the time of release of this current version. Chetty _et al_ (2011) did distribute
+their _Stata_ code, which was used for kink analysis, and I will use it to validate
+_bunchr_ for kinks. Unfortunately, I cannot use it with the original administrative
+data used by the researchers. However, I can run a simulation and test for
+similarity in results. The _Stata_ program was written by Tore Olsen,
 and can be found in Raj Chetty's [website](http:/www.rajchetty.com/chettyfiles/bunch_count.zip).
-To replicate these results, you will need to download and install the `bunch_count`
-function for _Stata_, and of course define the working directories properly.
+To replicate these results, you will need a copy of _Stata_ of course. Download
+and install the `bunch_count` function for _Stata_, and define the working
+directories properly.
 
-First, I create a dataset with `bunchr`. The _Stata_ function required collapsed,
+First, I create a dataset with `bunchr`. The _Stata_ function requires collapsed,
 binned data. I use `bunch_viewer` to create and export that. Note that 
 `bunch_viewer` will create the histogram by placing the kink point in the middle
 of a bin. 
@@ -328,19 +350,19 @@ of a bin.
 set.seed(1982)
 ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.3, 0, 0.2, 0, 1000)
-data <- bunch_viewer(earning_vec, 1000, binw=50, report = T)
+data <- bunch_viewer(earning_vec, zstar = 1000, binw = 50, report = T)
 sim_data <- data.frame(cbind(data$mids,data$counts))
 colnames(sim_data) = c("earnings","counts")
 ```
 
-Now, save the simulated earning histogram in comma delimited format, which is 
+Now, save the simulated earning histogram in comma delimited file, which is 
 easy to read in _Stata_:
 
 ``` {r chetty2, eval=FALSE}
 write.csv(sim_data, file="sim_data.csv", row.names = F)
 ```
 
-Now, run the code in _Stata_:
+Now, run this code in _Stata_:
 
 ``` {r chetty2.1, eval=FALSE}
 insheet using "sim_data.csv", clear
@@ -363,10 +385,13 @@ the bin width, counter-factual area, excluded area, and correcting for shift on
 the right side of the notch. The main difference is that, since `bunch` calculates
 the estimated elasticity, it needs the marginal tax rates as inputs (this will not
 matter for the counter-factual estimation). Also note that I shut down the default option for model selection for the counter-factual (mostly useful for notches, 
-and non-existing in `bunch_count`), and use the default 7th degree polynomial.
+and non-existing in `bunch_count`), and use the default $7^{th}$ degree polynomial.
 
 ``` {r chetty4, eval=TRUE}
-estim <- bunch(earning_vec, 1000, 0, 0.2, 0, 10, 10, 1, 1, 50, max_iter = 200, correct = T, select = F, poly_size = 7, draw = F)
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0, 
+               cf_start = 10, cf_end = 10, exlude_before = 1, exclude_after =  1,
+               binw = 50, max_iter = 200, correct = T, select = F, poly_size = 7,
+               draw = F)
 # creating comparison data-frame
 bunchr_res <- estim$data
 comp_data <- cbind(bunchr_res, chetty_res)

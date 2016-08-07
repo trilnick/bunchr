@@ -9,7 +9,8 @@ path = file.path(system.file("extdata", "compare_results.csv", package = "bunchr
 set.seed(42)
 ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0, 0.1, 0, 1000)
-bunch_viewer(earning_vec, 1000, 10,10,2,2, binw = 50, trimy=F)
+bunch_viewer(earning_vec, 1000, cf_start = 10, cf_end = 10, exclude_before = 2,
+             exclude_after = 2, binw = 50, trimy=F)
 
 ## ----first_kink----------------------------------------------------------
 kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
@@ -34,7 +35,7 @@ quantile(kink_est$booted_Bn, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.1, 200, 1000)
 bunch_viewer(earning_vec, 1000, 20, 50, 2, 25, binw = 20)
 notch_est <- bunch(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
-                   cf_start = 50, cf_end = 50, force_after = FALSE,
+                   cf_start = 20, cf_end = 50, force_after = FALSE,
                    exclude_before = 2, exclude_after = 25, binw = 20,
                    nboots = 100, seed = 123)
 notch_est$e
@@ -70,7 +71,7 @@ quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 
 ## ----error1--------------------------------------------------------------
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.1, 0, 1000)
-bunch_viewer(earning_vec, 1000, 10, 10, 1, 1, binw = 50, trimy=F)
+bunch_viewer(earning_vec, 1000, 10, 10, 1, 1, binw = 50, trimy = F)
 kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 0,
                    cf_start = 50, cf_end = 50,
                    exclude_before = 1, exclude_after = 1, binw = 10,
@@ -98,7 +99,7 @@ quantile(kink_est$booted_e, probs=c(0, 0.05, 0.1, 0.5, 0.9, 0.95, 1))
 set.seed(1982)
 ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.3, 0, 0.2, 0, 1000)
-data <- bunch_viewer(earning_vec, 1000, binw=50, report = T)
+data <- bunch_viewer(earning_vec, zstar = 1000, binw = 50, report = T)
 sim_data <- data.frame(cbind(data$mids,data$counts))
 colnames(sim_data) = c("earnings","counts")
 
@@ -115,7 +116,10 @@ chetty_res <- read.csv(file = path)
 chetty_res <- chetty_res[order(chetty_res$earnings), ]
 
 ## ----chetty4, eval=TRUE--------------------------------------------------
-estim <- bunch(earning_vec, 1000, 0, 0.2, 0, 10, 10, 1, 1, 50, max_iter = 200, correct = T, select = F, poly_size = 7, draw = F)
+estim <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0, 
+               cf_start = 10, cf_end = 10, exlude_before = 1, exclude_after =  1,
+               binw = 50, max_iter = 200, correct = T, select = F, poly_size = 7,
+               draw = F)
 # creating comparison data-frame
 bunchr_res <- estim$data
 comp_data <- cbind(bunchr_res, chetty_res)
