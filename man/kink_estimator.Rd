@@ -7,7 +7,7 @@
 kink_estimator(earnings, zstar, t1, t2, cf_start = NA, cf_end = NA,
   exclude_before = 2, exclude_after = 2, binw = 10, poly_size = 7,
   convergence = 0.01, max_iter = 100, correct = TRUE, select = TRUE,
-  draw = TRUE)
+  draw = TRUE, title = "Bunching Visualization", varname = "Earnings")
 }
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one.}
@@ -45,6 +45,10 @@ for shifting left because of the notch? See details.}
 histogram? See details.}
 
 \item{draw}{Should a graph be drawn?}
+
+\item{title}{Title for plot output}
+
+\item{varname}{Name for running variable, to be desplayed in the plot}
 }
 \value{
 \code{kink_estimator} returns a list of the following variables:

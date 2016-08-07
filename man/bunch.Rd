@@ -7,7 +7,9 @@
 bunch(earnings, zstar, t1, t2, Tax = 0, cf_start = NA, cf_end = NA,
   exclude_before = NA, exclude_after = NA, force_after = FALSE,
   binw = 10, poly_size = 7, convergence = 0.01, max_iter = 100,
-  correct = TRUE, select = TRUE, draw = TRUE, nboots = 0, seed = NA)
+  correct = TRUE, select = TRUE, draw = TRUE, nboots = 0, seed = NA,
+  progress = FALSE, title = "Bunching Visualization",
+  varname = "Earnings")
 }
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one.}
@@ -56,6 +58,12 @@ histogram? See details.}
 \item{nboots}{how many bootstraps should be run?}
 
 \item{seed}{specify seed for bootstraps (earnings sampling).}
+
+\item{progress}{Should a progress bar be desplayed?}
+
+\item{title}{Title for Plot output}
+
+\item{varname}{Name for running variable, to be desplayed in the plot}
 }
 \value{
 \code{bunch} returns a list comprising of the parameters returned by

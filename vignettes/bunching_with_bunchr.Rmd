@@ -180,7 +180,7 @@ searching for the end of the notch.
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.1, 200, 1000)
 bunch_viewer(earning_vec, 1000, 20, 50, 2, 25, binw = 20)
 notch_est <- bunch(earning_vec, zstar = 1000, t1 = 0.1, t2 = 0.1, Tax = 200,
-                   cf_start = 50, cf_end = 50, force_after = FALSE,
+                   cf_start = 20, cf_end = 50, force_after = FALSE,
                    exclude_before = 2, exclude_after = 25, binw = 20,
                    nboots = 100, seed = 123)
 notch_est$e

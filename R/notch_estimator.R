@@ -27,6 +27,8 @@
 #' @param select Should model selection be used to find counter-factual
 #'  histogram? See details.
 #' @param draw Should a graph be drawn?
+#' @param title Title for plot output
+#' @param varname Name for running variable, to be desplayed in the plot
 #'
 #' @details A histogram is created from the earnings vector, with the kink
 #' point zstar as the center of one of the bins.
@@ -90,7 +92,8 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
                             cf_start = NA, cf_end = NA,
                             exclude_before = NA, exclude_after = NA, force_after = FALSE,
                             binw = 10, poly_size = 7, convergence = 0.01,
-                            max_iter = 100, select = TRUE,draw = FALSE) {
+                            max_iter = 100, select = TRUE, draw = TRUE,
+                            title = "Bunching Visualization", varname = "Earnings") {
   ## ---------------------------------------------------------------------------
   ## Error handling
   if (Tax == 0) {                      # this shouldn't happen when using bunch
@@ -281,7 +284,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   }
 
   # calculating the bunching estimate - for the bunch
-  ifelse(force_after==FALSE,
+  ifelse(force_after == FALSE,
          new_B <- sum(sum(temp_reg$coefficients[2:(2 + exclude_before + 1)])),
          new_B <- naive_B)
 
@@ -292,11 +295,11 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   iterations <- counter
   #
   # drawing
-  if (draw==TRUE) {
+  if (draw == TRUE) {
     graphics::plot(bunch_hist, freq=TRUE,ylim=c(0,1.1 *
                             stats::quantile(bunch_hist$counts, probs = c(0.99))),
-         main=paste0("Bunching Visualization"),
-             xlab="Earnings",ylab="Counts (bunch not to scale)")
+         main = paste(title),
+             xlab = paste(varname), ylab="Counts (bunch not to scale)")
     graphics::lines(x = reg_data$mid, y = reg_data$cf_counts,col = "purple",lwd=2)
     graphics::abline(v=c(zstar - binw / 2 - exclude_before * binw,
                zstar + binw / 2 + exclude_after * binw),

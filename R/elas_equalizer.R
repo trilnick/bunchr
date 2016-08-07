@@ -33,7 +33,7 @@ elas_equalizer <- function(elas, t1, t2, Tax, zstar, delta_zed, binw) {
   ## ---------------------------------------------------------------------------
   ## Error handling
   if (zstar < 0 | delta_zed < 0 ) {
-    stop("Zstar and delta_zed and binw need to be non-negative")
+    stop("Zstar, delta_zed and binw need to be non-negative")
   }
   if (binw <= 0) {
     stop("Bin width must be positive")

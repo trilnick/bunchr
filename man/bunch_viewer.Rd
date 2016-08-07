@@ -6,7 +6,7 @@
 \usage{
 bunch_viewer(earnings, zstar = NA, cf_start = 10, cf_end = 50,
   exclude_before = 2, exclude_after = 20, binw = NA, trimy = TRUE,
-  report = FALSE)
+  report = FALSE, title = "Count Histogram", varname = "Running Variable")
 }
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one}
@@ -29,6 +29,10 @@ histogram should start.}
 histogram?}
 
 \item{report}{Should the function return the actual histogram?}
+
+\item{title}{Title for Plot output}
+
+\item{varname}{Name for running variable, to be desplayed in the plot}
 }
 \value{
 A plot, the actual histogram if report is set to TRUE.
@@ -42,7 +46,7 @@ as the center of a bin.
 \examples{
 ability_vec <- 4000 * rbeta(100000, 2, 5)
 earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.2, 0, 1000)
-bunch_viewer(earning_vec, 1000, 20, 40, 2, 2, 20, TRUE, FALSE)
+bunch_viewer(earning_vec, 1000, 20, 40, 2, 2, 20, trimy = TRUE, report = FALSE)
 
 }
 \seealso{

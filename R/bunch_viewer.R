@@ -17,6 +17,8 @@
 #' @param trimy Logical. Should the y-axis be trimmed to better show off-bunching
 #' histogram?
 #' @param report Should the function return the actual histogram?
+#' @param title Title for Plot output
+#' @param varname Name for running variable, to be desplayed in the plot
 #'
 #' @return A plot, the actual histogram if report is set to TRUE.
 #'
@@ -25,13 +27,14 @@
 #' @examples
 #' ability_vec <- 4000 * rbeta(100000, 2, 5)
 #' earning_vec <- sapply(ability_vec, earning_fun, 0.2, 0.1, 0.2, 0, 1000)
-#' bunch_viewer(earning_vec, 1000, 20, 40, 2, 2, 20, TRUE, FALSE)
+#' bunch_viewer(earning_vec, 1000, 20, 40, 2, 2, 20, trimy = TRUE, report = FALSE)
 #'
 #' @export
 #'
 bunch_viewer <- function(earnings, zstar = NA, cf_start = 10, cf_end = 50,
                          exclude_before = 2, exclude_after = 20,
-                         binw = NA, trimy = TRUE, report = FALSE) {
+                         binw = NA, trimy = TRUE, report = FALSE,
+                         title = "Count Histogram", varname = "Running Variable") {
 
   ## ---------------------------------------------------------------------------
   ## Error handling
@@ -70,8 +73,8 @@ bunch_viewer <- function(earnings, zstar = NA, cf_start = 10, cf_end = 50,
          )
   # plotting the thing
   graphics::plot(bunch_hist, freq = TRUE, ylim = graphy,
-       main=paste0("Count Histogram"),
-       xlab="Running Variable",ylab="Counts (bunch not to scale)")
+       main = paste(title),
+       xlab = varname, ylab="Counts (bunch not to scale)")
   graphics::abline(v = zstar, lty = 2,lwd = 2)
   graphics::abline(v=c(zstar - exclude_before * binw, zstar + exclude_after * binw),
          col="green4", lty = 2, lwd = 2)

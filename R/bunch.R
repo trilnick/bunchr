@@ -32,6 +32,8 @@
 #' @param nboots how many bootstraps should be run?
 #' @param seed specify seed for bootstraps (earnings sampling).
 #' @param progress Should a progress bar be desplayed?
+#' @param title Title for Plot output
+#' @param varname Name for running variable, to be desplayed in the plot
 #'
 #' @details \code{bunch} checks if the specification has a kink, i.e. if the Tax
 #' parameter is greater than zero. If so, it applies \code{notch_estimator}.
@@ -71,7 +73,8 @@ bunch <- function(earnings, zstar, t1, t2, Tax = 0,
                    binw = 10, poly_size = 7,
                    convergence = 0.01, max_iter = 100,
                    correct = TRUE, select = TRUE, draw = TRUE, nboots = 0,
-                   seed = NA, progress = FALSE) {
+                   seed = NA, progress = FALSE,
+                   title = "Bunching Visualization", varname = "Earnings") {
   ## ---------------------------------------------------------------------------
   ## Error handling - this deals with all sorts of user errors in the input of
   #  parameters. These issues are NOT dealt with in the specific functions.
@@ -160,7 +163,8 @@ bunch <- function(earnings, zstar, t1, t2, Tax = 0,
 
     result1 <- kink_estimator(earnings, zstar, t1, t2, cf_start, cf_end,
                               exclude_before, exclude_after, binw, poly_size,
-                              convergence, max_iter, correct, select, draw)
+                              convergence, max_iter, correct, select, draw,
+                              title, varname)
     # bootstrap procedure
     if (nboots > 0) {
       boot_e <- rep(NA, nboots)
@@ -180,7 +184,7 @@ bunch <- function(earnings, zstar, t1, t2, Tax = 0,
         temp_result <- kink_estimator(temp_pop, zstar, t1, t2, cf_start, cf_end,
                                      exclude_before, exclude_after, binw, poly_size,
                                      convergence, max_iter, correct, select,
-                                     draw=FALSE)
+                                     draw=FALSE, title, varname)
         boot_e[i] <- temp_result$e
         boot_Bn[i] <- temp_result$Bn
         boot_b[i] <- temp_result$b
@@ -215,7 +219,8 @@ bunch <- function(earnings, zstar, t1, t2, Tax = 0,
                                cf_start, cf_end,
                                exclude_before, exclude_after, force_after,
                                binw, poly_size,
-                               convergence, max_iter, select, draw)
+                               convergence, max_iter, select, draw,
+                               title, varname)
     # bootstrap procedure
     if (nboots > 0) {
       boot_e <- rep(NA, nboots)
@@ -237,7 +242,7 @@ bunch <- function(earnings, zstar, t1, t2, Tax = 0,
                                       exclude_before, exclude_after, force_after,
                                       binw,
                                       poly_size, convergence, max_iter, select,
-                                      draw = FALSE)
+                                      draw = FALSE, title, varname)
         boot_e[i] <- temp_result$e
         boot_Bn[i] <- temp_result$Bn
         boot_dz[i] <- temp_result$notch_size
