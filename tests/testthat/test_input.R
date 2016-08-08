@@ -102,6 +102,16 @@ test_that("Other variables are set correctly", {
                         correct = F, select = F, draw = F,
                         nboots = 1),
                 "Such few bootstraps?")
+  expect_error(bunch(earning_vec[1:1000], zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                     cf_start = 10, cf_end = 10,
+                     exclude_before = 1, exclude_after = 1, force_after = 3,
+                     binw = 50, correct = F, select = F, draw = F),
+               "force_after must be TRUE or FALSE")
+  expect_warning(bunch(earning_vec[1:1000], zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+                     cf_start = 10, cf_end = 10,
+                     exclude_before = 1, exclude_after = 1, force_after = T,
+                     binw = 50, correct = F, select = F, draw = F, progress = 5),
+                 "Wrong input for progress bar option, not showing it")
 
 
 })
