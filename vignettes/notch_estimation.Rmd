@@ -51,7 +51,7 @@ of income this individual would earn in a world where marginal tax rate is zero.
 There is an agent with ability $n^*$, who optimally earns exactly the sum of money
 where the notch kicks in. This agent's tangency condition for maximizing utility
 is $z^* = n^* \cdot (1-t_1)^e$.
-There is another agent, the _marginal_ _buncher_, with ability
+There is another agent, the marginal buncher, with ability
 $n^* + \Delta n^*$. This agent is indifferent between earning at the notch point
 $z^*$ or earning at the point satisfying his first order condition, which we call
 $z^* + \Delta z^*$. The _marginal buncher is indifferent between two bundles, as
