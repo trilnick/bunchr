@@ -102,7 +102,7 @@ test_that("Other variables are set correctly", {
                         correct = F, select = F, draw = F,
                         nboots = 1),
                 "Such few bootstraps?")
-  expect_error(bunch(earning_vec[1:1000], zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
+  expect_error(bunch(earning_vec[1:1000], zstar = 1000, t1 = 0, t2 = 0.1, Tax = 500,
                      cf_start = 10, cf_end = 10,
                      exclude_before = 1, exclude_after = 1, force_after = 3,
                      binw = 50, correct = F, select = F, draw = F),
