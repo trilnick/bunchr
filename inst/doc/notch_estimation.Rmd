@@ -55,7 +55,9 @@ There is another agent, the marginal buncher, with ability
 $n^* + \Delta n^*$. This agent is indifferent between earning at the notch point
 $z^*$ or earning at the point satisfying his first order condition, which we call
 $z^* + \Delta z^*$. The marginal buncher is indifferent between two bundles, as
-the budget line is not convex.
+the budget line is not convex. Agents with higher ability have only one optimal
+point, a tangency point to the right of the notch. They are unaffected by the 
+notch.
 
 When estimating elasticity for a notch, `bunchr` first tries to get an estimate
 of $\Delta z^*$, using the amount of bunching and assuming that all that bunching
