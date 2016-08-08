@@ -12,7 +12,7 @@
 
 <meta name="author" content="Itai Trilnick" />
 
-<meta name="date" content="2016-08-07" />
+<meta name="date" content="2016-08-08" />
 
 <title>Bunching estimation with bunchr</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Bunching estimation with <code>bunchr</code></h1>
 <h4 class="author"><em>Itai Trilnick</em></h4>
-<h4 class="date"><em>2016-08-07</em></h4>
+<h4 class="date"><em>2016-08-08</em></h4>
 
 
 
@@ -89,7 +89,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="pre-analysis-viewing-a-distribution" class="section level2">
 <h2>Pre-analysis: Viewing a distribution</h2>
 <p>All you need is a vector of earnings. Using <code>bunch_viewer</code>, you can see how a histogram of your data looks like. Additionally, you can see where you could potentially set some of the parameters for analysis. And, you can save the histogram as an <em>R</em> histogram object.</p>
-<p>Let’s create an earning distribution for a kinked budget set. First, I create a vector of latent abilities, with 100,000 values. Then, I simulate the earnings for a situation where everyone’s elasticity of earnings w.r.t. marginal tax rate is 0.2 (<em>elas</em> = 0.2). The simulationincludes a kink at the earning point of 1000 (<em>zstar</em> = 1000), where the marginal tax rate increases from 0% to 10% (<em>t1</em> = 0, <em>t2</em> = 0.1), the notch height is zero (<em>Tax</em> = 0). After creating the earning vector, we can view it with <code>bunch_viewer</code>.</p>
+<p>Let’s create an earning distribution for a kinked budget set. First, I create a vector of latent abilities, with 100,000 values. Then, I simulate the earnings for a situation where everyone’s elasticity of earnings w.r.t. marginal tax rate is 0.2 (<em>elas</em> = 0.2). The simulation includes a kink at the earning point of 1000 (<em>zstar</em> = 1000), where the marginal tax rate increases from 0% to 10% (<em>t1</em> = 0, <em>t2</em> = 0.1), the notch height is zero (<em>Tax</em> = 0). After creating the earning vector, we can view it with <code>bunch_viewer</code>.</p>
 <p>As a preparation for further analysis, I can specify where the counter-factual distribution will be calculated (setting <em>cf_start</em> and <em>cf_end</em>), and where the bunching seems to be (<em>exclude_before</em> and <em>exclude_after</em>) relative to the place of the notch. Note that these are stated in number of bins. The wider the bins, the greater the distances from the kink! That’s where <code>bunch_viewer</code> comes handy.</p>
 <p>In this case, one can observe the whole bunching bin and the rest of the distribution quite well. In other cases, specially notches (where bunching is more substantial), the height of the bunching bin can be so high that, in order to include it in the graph, the rest of the distribution can hardly be seen. In these cases, I would keep the default option of “trimming” the vertical axis by keeping the default options and not specifying <em>trimy</em> = F. Also note that you can personalize the plot’s title and x-axis label.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">42</span>)
@@ -118,7 +118,7 @@ earning_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(ability
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">quantile</span>(kink_est$booted_Bn, <span class="dt">probs=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="dv">1</span>))</code></pre></div>
 <pre><code>##        0%        5%       10%       50%       90%       95%      100% 
 ##  599.0476  744.2115  851.2940 1166.8193 1481.8489 1541.6775 1939.3720</code></pre>
-<p>Note: we modeled the earnings with elasticity of 0.2, but got an estimate of 0.186. That’s no so bad, considering that the width of the bins and the excluded area have an attenuating effect. We might not be very happy with the bootstrapped confidence interval we got. It’s pretty wide, both for the elasticity estimate and the amount of bunching. Since the number of observations allows it, and the simulation is pretty “clean”, we can try this with narrower bins (width 1 instead of 50), and excluded area (same number of bins, but bins are narrower!). This does shrink the confidence intervals, and gives a point estimate closer to the value we used to generate the data. Also, the plot title and x-axis label can be modified by the user. In this case, however, plotting is supressed.</p>
+<p>Note: we modeled the earnings with elasticity of 0.2, but got an estimate of 0.186. That’s no so bad, considering that the width of the bins and the excluded area have an attenuating effect. We might not be very happy with the bootstrapped confidence interval we got. It’s pretty wide, both for the elasticity estimate and the amount of bunching. Since the number of observations allows it, and the simulation is pretty “clean”, we can try this with narrower bins (width 1 instead of 50), and excluded area (same number of bins, but bins are narrower!). This does shrink the confidence intervals, and gives a point estimate closer to the value we used to generate the data. Also, the plot title and x-axis label can be modified by the user. In this case, however, plotting is suppressed.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kink_est &lt;-<span class="st"> </span><span class="kw">bunch</span>(earning_vec, <span class="dt">zstar =</span> <span class="dv">1000</span>, <span class="dt">t1 =</span> <span class="dv">0</span>, <span class="dt">t2 =</span> <span class="fl">0.1</span>, <span class="dt">Tax =</span> <span class="dv">0</span>,
                    <span class="dt">cf_start =</span> <span class="dv">500</span>, <span class="dt">cf_end =</span> <span class="dv">500</span>,
                    <span class="dt">exclude_before =</span> <span class="dv">10</span>, <span class="dt">exclude_after =</span> <span class="dv">10</span>, <span class="dt">binw =</span> <span class="dv">1</span>,
@@ -154,7 +154,7 @@ kink_est$e</code></pre></div>
 <pre><code>##        0%        5%       10%       50%       90%       95%      100% 
 ## 0.1203677 0.1407937 0.1621033 0.2074509 0.2074509 0.2074509 0.2074509</code></pre>
 <p>The example above is a good one: _delta_zed seems to be the actual end of the notch. Sometimes, the output plot will show <span class="math inline">\(\Delta z^*\)</span> not concurring with what visibly seems like the end of the notch. This usually means that the elasticity estimates will be wrong. In that case, it might be useful to change the <em>exclude_after</em> parameter and see if the plot come out better.</p>
-<p>Another option is using the <em>force_after</em> option to set the end of the notch manually. Howerver, this means that not all bunching comes from inside the notch. When using this option, make sure to understand exactly what is the parameter you are estimating.</p>
+<p>Another option is using the <em>force_after</em> option to set the end of the notch manually. However, this means that not all bunching comes from inside the notch. When using this option, make sure to understand exactly what is the parameter you are estimating.</p>
 <p>Another issue is the counter-factual distribution. For larger notches, the interpolation is harder. Remember the interpolation is based on the histogram bins outside the excluded area (green lines) but inside the analysis area (red). If the counter-factual distribution in the output plot does not seem convincing, a few measures can be taken:</p>
 <ul>
 <li>Widen the counter-factual analysis area (red lines).</li>
@@ -269,9 +269,10 @@ chetty_res &lt;-<span class="st"> </span>chetty_res[<span class="kw">order</span
                <span class="dt">draw =</span> F)</code></pre></div>
 <pre><code>## Error in bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0, cf_start = 10, : unused argument (exlude_before = 1)</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># creating comparison data-frame</span>
-bunchr_res &lt;-<span class="st"> </span>estim$data
-comp_data &lt;-<span class="st"> </span><span class="kw">cbind</span>(bunchr_res, chetty_res)</code></pre></div>
-<pre><code>## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 72, 71</code></pre>
+bunchr_res &lt;-<span class="st"> </span>estim$data</code></pre></div>
+<pre><code>## Error in eval(expr, envir, enclos): object 'estim' not found</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comp_data &lt;-<span class="st"> </span><span class="kw">cbind</span>(bunchr_res, chetty_res)</code></pre></div>
+<pre><code>## Error in cbind(bunchr_res, chetty_res): object 'bunchr_res' not found</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comp_data$cf_diff &lt;-<span class="st"> </span>comp_data$cf_counts -<span class="st"> </span>comp_data$plotabc3</code></pre></div>
 <pre><code>## Error in eval(expr, envir, enclos): object 'comp_data' not found</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comp_data$per_diff &lt;-<span class="st"> </span><span class="dv">100</span> *<span class="st"> </span>comp_data$cf_diff /<span class="st"> </span>comp_data$plotabc3</code></pre></div>

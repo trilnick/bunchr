@@ -11,7 +11,12 @@ vignette: >
   This vignette is meant to explain how `bunchr` estimates the earning elasticity
 from bunching induced by a notch. These calculations derive the formulas used for
 notch analysis. It closely follows the discussion by Kleven^[Kleven, H.J., 2016.
-  _"Bunching"_, Annual Review of Economics 8(1)].
+  _"Bunching"_, Annual Review of Economics 8(1)] with one main difference: Kleven
+discusses a notch created by a change in average tax rates on income. `bunchr’
+is inspired by another setting: tax rates are marginal, and the notch is created
+by a “cash cliff” - where a fixed sum of money is taken from the agent for crossing
+a threshold. This “cash cliff” is observed in many settings of government transfers
+in developed countries (e.g. disability insurance in the US).
 
 ## Setup
 The agent faces the following budget line:
@@ -25,11 +30,11 @@ The agent faces the following budget line:
 
 Where $c$ is consumption (net earnings after tax), $z$ are pre-tax earnings,
 $z^*$ is the notch point, $t_1$ and $t_2$ are the marginal tax rates before and
-after the notch, and $T$ is the Taxed "penalty" for crossing the notch.
+after the notch point, and $T$ is the Taxed "penalty" for crossing the notch.
 
-An agent has an ability measure $n_i$, and an elasticity or earnings w.r.t.
+An agent has an ability measure $n_i$, and an elasticity of earnings w.r.t.
 net-of-tax rate $e_i$. We assume a smooth ability distribution in the population.
-Also, we assume that elasticity is constant among all agents, or that its mean,
+We also assume that elasticity is constant among all agents, or that its mean,
 conditional on ability, is constant (in the latter case, we are estimating the
 mean elasticity in the population). The agent has quasi-linear, iso-elastic utility:
 
@@ -44,17 +49,20 @@ of income this individual would earn in a world where marginal tax rate is zero.
 
 ## Estimating $e$
 There is an agent with ability $n^*$, who optimally earns exactly the sum of money
-where the notch kicks in. This individual has tangency $z^* = n^* \cdot (1-t_1)^e$.
-There is another agent, the \textbf{marginal buncher}, with ability
+where the notch kicks in. This agent's tangency condition for maximizing utility
+is $z^* = n^* \cdot (1-t_1)^e$.
+There is another agent, the marginal buncher, with ability
 $n^* + \Delta n^*$. This agent is indifferent between earning at the notch point
 $z^*$ or earning at the point satisfying his first order condition, which we call
-$z^* + \Delta z^*$.
+$z^* + \Delta z^*$. The marginal buncher is indifferent between two bundles, as
+the budget line is not convex.
 
 When estimating elasticity for a notch, `bunchr` first tries to get an estimate
 of $\Delta z^*$, using the amount of bunching and assuming that all that bunching
 comes from the right side of the distribution. After estimating this $\Delta z^*$,
-`bunchr` finds the elasticity that would equate utilities of this agent at both
-point: $z^*$ and $z^* + \Delta z^*$. To do so, it uses the convenient connection
+or being provided one by the user with the _force\_after_ option,`bunchr` finds
+the elasticity that would equate utilities of this agent at both point:
+$z^*$ and $z^* + \Delta z^*$. To do so, it uses the convenient connection
 between ability and earnings given by the first order condition:
 $z^* + \Delta z^* = (n^* + \Delta n^*)\cdot (1-t_2)^e$
 

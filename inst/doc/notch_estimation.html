@@ -12,7 +12,7 @@
 
 <meta name="author" content="Itai Trilnick" />
 
-<meta name="date" content="2016-08-07" />
+<meta name="date" content="2016-08-08" />
 
 <title>Solving for Elasticity in a Notch</title>
 
@@ -32,11 +32,11 @@
 
 <h1 class="title toc-ignore">Solving for Elasticity in a Notch</h1>
 <h4 class="author"><em>Itai Trilnick</em></h4>
-<h4 class="date"><em>2016-08-07</em></h4>
+<h4 class="date"><em>2016-08-08</em></h4>
 
 
 
-<p>This vignette is meant to explain how <code>bunchr</code> estimates the earning elasticity from bunching induced by a notch. These calculations derive the formulas used for notch analysis. It closely follows the discussion by Kleven<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
+<p>This vignette is meant to explain how <code>bunchr</code> estimates the earning elasticity from bunching induced by a notch. These calculations derive the formulas used for notch analysis. It closely follows the discussion by Kleven<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> with one main difference: Kleven discusses a notch created by a change in average tax rates on income. `bunchr’ is inspired by another setting: tax rates are marginal, and the notch is created by a “cash cliff” - where a fixed sum of money is taken from the agent for crossing a threshold. This “cash cliff” is observed in many settings of government transfers in developed countries (e.g. disability insurance in the US).</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <p>The agent faces the following budget line:</p>
@@ -46,16 +46,16 @@
      z^* \cdot (1-t_1) + (z - z^*)\cdot (1-t_2) - T   &amp; \quad \text{if} \quad z &gt; z^*\\
      \end{cases}
      \]</span></p>
-<p>Where <span class="math inline">\(c\)</span> is consumption (net earnings after tax), <span class="math inline">\(z\)</span> are pre-tax earnings, <span class="math inline">\(z^*\)</span> is the notch point, <span class="math inline">\(t_1\)</span> and <span class="math inline">\(t_2\)</span> are the marginal tax rates before and after the notch, and <span class="math inline">\(T\)</span> is the Taxed “penalty” for crossing the notch.</p>
-<p>An agent has an ability measure <span class="math inline">\(n_i\)</span>, and an elasticity or earnings w.r.t. net-of-tax rate <span class="math inline">\(e_i\)</span>. We assume a smooth ability distribution in the population. Also, we assume that elasticity is constant among all agents, or that its mean, conditional on ability, is constant (in the latter case, we are estimating the mean elasticity in the population). The agent has quasi-linear, iso-elastic utility:</p>
+<p>Where <span class="math inline">\(c\)</span> is consumption (net earnings after tax), <span class="math inline">\(z\)</span> are pre-tax earnings, <span class="math inline">\(z^*\)</span> is the notch point, <span class="math inline">\(t_1\)</span> and <span class="math inline">\(t_2\)</span> are the marginal tax rates before and after the notch point, and <span class="math inline">\(T\)</span> is the Taxed “penalty” for crossing the notch.</p>
+<p>An agent has an ability measure <span class="math inline">\(n_i\)</span>, and an elasticity of earnings w.r.t. net-of-tax rate <span class="math inline">\(e_i\)</span>. We assume a smooth ability distribution in the population. We also assume that elasticity is constant among all agents, or that its mean, conditional on ability, is constant (in the latter case, we are estimating the mean elasticity in the population). The agent has quasi-linear, iso-elastic utility:</p>
 <p><span class="math display">\[u(c,z) = c - \frac{n}{1 + 1/e } \cdot \left( \frac{z}{n} \right)^{1+1/e}\]</span></p>
 <p>Which has a first order condition of: <span class="math display">\[ z = n \cdot (1-t)^e\]</span></p>
 <p>Where <span class="math inline">\(z\)</span> is the level of earnings. Note that when the marginal tax rate is zero, earnings equal ability. Thus we can interpret the ability parameter as the level of income this individual would earn in a world where marginal tax rate is zero.</p>
 </div>
 <div id="estimating-e" class="section level2">
 <h2>Estimating <span class="math inline">\(e\)</span></h2>
-<p>There is an agent with ability <span class="math inline">\(n^*\)</span>, who optimally earns exactly the sum of money where the notch kicks in. This individual has tangency <span class="math inline">\(z^* = n^* \cdot (1-t_1)^e\)</span>. There is another agent, the , with ability <span class="math inline">\(n^* + \Delta n^*\)</span>. This agent is indifferent between earning at the notch point <span class="math inline">\(z^*\)</span> or earning at the point satisfying his first order condition, which we call <span class="math inline">\(z^* + \Delta z^*\)</span>.</p>
-<p>When estimating elasticity for a notch, <code>bunchr</code> first tries to get an estimate of <span class="math inline">\(\Delta z^*\)</span>, using the amount of bunching and assuming that all that bunching comes from the right side of the distribution. After estimating this <span class="math inline">\(\Delta z^*\)</span>, <code>bunchr</code> finds the elasticity that would equate utilities of this agent at both point: <span class="math inline">\(z^*\)</span> and <span class="math inline">\(z^* + \Delta z^*\)</span>. To do so, it uses the convenient connection between ability and earnings given by the first order condition: <span class="math inline">\(z^* + \Delta z^* = (n^* + \Delta n^*)\cdot (1-t_2)^e\)</span></p>
+<p>There is an agent with ability <span class="math inline">\(n^*\)</span>, who optimally earns exactly the sum of money where the notch kicks in. This agent’s tangency condition for maximizing utility is <span class="math inline">\(z^* = n^* \cdot (1-t_1)^e\)</span>. There is another agent, the marginal buncher, with ability <span class="math inline">\(n^* + \Delta n^*\)</span>. This agent is indifferent between earning at the notch point <span class="math inline">\(z^*\)</span> or earning at the point satisfying his first order condition, which we call <span class="math inline">\(z^* + \Delta z^*\)</span>. The marginal buncher is indifferent between two bundles, as the budget line is not convex.</p>
+<p>When estimating elasticity for a notch, <code>bunchr</code> first tries to get an estimate of <span class="math inline">\(\Delta z^*\)</span>, using the amount of bunching and assuming that all that bunching comes from the right side of the distribution. After estimating this <span class="math inline">\(\Delta z^*\)</span>, or being provided one by the user with the <em>force_after</em> option,<code>bunchr</code> finds the elasticity that would equate utilities of this agent at both point: <span class="math inline">\(z^*\)</span> and <span class="math inline">\(z^* + \Delta z^*\)</span>. To do so, it uses the convenient connection between ability and earnings given by the first order condition: <span class="math inline">\(z^* + \Delta z^* = (n^* + \Delta n^*)\cdot (1-t_2)^e\)</span></p>
 <div id="utility-of-marginal-buncher-at-bunch-point-z" class="section level3">
 <h3>Utility of Marginal Buncher at Bunch Point <span class="math inline">\(z^*\)</span></h3>
 \begin{align*}
