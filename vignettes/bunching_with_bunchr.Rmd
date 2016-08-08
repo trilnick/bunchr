@@ -47,7 +47,7 @@ The Quarterly Journal of Economics, 128(2)]. This creates a drop in the budget
 line of individuals, as _all_ earnings are subject to a higher tax rate once
 earnings exceed the threshold.
 
-When a policy introduces a kink or a notch,  a structural analysis can be used to
+When a policy introduces a kink or a notch, a structural analysis can be used to
 estimate a parameter of interest, such as the elasticity of earnings with respect
 to marginal tax rates. To do this, a specific function must be assumed for the
 agents. In many cases, a convenient function for analysis is quasi-linear and
@@ -91,7 +91,7 @@ histogram as an _R_ histogram object.
 Let's create an earning distribution for a kinked budget set. First, I create a
 vector of latent abilities, with 100,000 values. Then, I simulate the earnings
 for a situation where everyone's elasticity of earnings w.r.t. marginal tax rate
-is 0.2 (_elas_ = 0.2). The simulationincludes a kink at the earning point of 1000
+is 0.2 (_elas_ = 0.2). The simulation includes a kink at the earning point of 1000
 (_zstar_ = 1000), where the marginal tax rate increases from 0% to 10%
 (_t1_ = 0, _t2_ = 0.1), the notch height is zero (_Tax_ = 0). After creating the
 earning vector, we can view it with `bunch_viewer`.
@@ -144,7 +144,7 @@ is pretty "clean", we can try this with narrower bins (width 1 instead of 50),
 and excluded area (same number of bins, but bins are narrower!). This does shrink
 the confidence intervals, and gives a point estimate closer to the value we used
 to generate the data. Also, the plot title and x-axis label can be modified by
-the user. In this case, however, plotting is supressed.
+the user. In this case, however, plotting is suppressed.
 
 ```{r second_kink2}
 kink_est <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.1, Tax = 0,
@@ -209,7 +209,7 @@ useful to change the _exclude\_after_ parameter and see if the plot come out
 better.
 
 Another option is using the _force_after_ option to set the end of the notch
-manually. Howerver, this means that not all bunching comes from inside the notch.
+manually. However, this means that not all bunching comes from inside the notch.
 When using this option, make sure to understand exactly what is the parameter
 you are estimating.
 

@@ -11,7 +11,12 @@ vignette: >
   This vignette is meant to explain how `bunchr` estimates the earning elasticity
 from bunching induced by a notch. These calculations derive the formulas used for
 notch analysis. It closely follows the discussion by Kleven^[Kleven, H.J., 2016.
-  _"Bunching"_, Annual Review of Economics 8(1)].
+  _"Bunching"_, Annual Review of Economics 8(1)] with one main difference: Kleven
+discusses a notch created by a change in average tax rates on income. `bunchr’
+is inspired by another setting: tax rates are marginal, and the notch is created
+by a “cash cliff” - where a fixed sum of money is taken from the agent for crossing
+a threshold. This “cash cliff” is observed in many settings of government transfers
+in developed countries (e.g. disability insurance in the US).
 
 ## Setup
 The agent faces the following budget line:
@@ -46,7 +51,7 @@ of income this individual would earn in a world where marginal tax rate is zero.
 There is an agent with ability $n^*$, who optimally earns exactly the sum of money
 where the notch kicks in. This agent's tangency condition for maximizing utility
 is $z^* = n^* \cdot (1-t_1)^e$.
-There is another agent, the _marginal buncher_, with ability
+There is another agent, the _marginal_ _buncher_, with ability
 $n^* + \Delta n^*$. This agent is indifferent between earning at the notch point
 $z^*$ or earning at the point satisfying his first order condition, which we call
 $z^* + \Delta z^*$. The _marginal buncher is indifferent between two bundles, as

@@ -20,7 +20,7 @@ rate in __kink__ and __notch__ settings. At the time of writing these lines, I a
 it is useful to many researchers.
 
 To validate the kink analysis, results from `bunchr` are compared with an existing _Stata_ utility function that was used in a peer reviewed article by Chetty,
-Friedman, Olsen, and Pistaferry (see vignette). I am happy to to get comments
+Friedman, Olsen, and Pistaferry (see vignette). I am happy to get comments
 and references to other codes for bunching analysis.
 
 Below are a few words about bunching analysis, kinks, and notches. For more information, references, and examples, please see the package vignettes. 
