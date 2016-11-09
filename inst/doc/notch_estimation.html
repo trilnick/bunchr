@@ -12,7 +12,7 @@
 
 <meta name="author" content="Itai Trilnick" />
 
-<meta name="date" content="2016-08-08" />
+<meta name="date" content="2016-11-08" />
 
 <title>Solving for Elasticity in a Notch</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">Solving for Elasticity in a Notch</h1>
 <h4 class="author"><em>Itai Trilnick</em></h4>
-<h4 class="date"><em>2016-08-08</em></h4>
+<h4 class="date"><em>2016-11-08</em></h4>
 
 
 
@@ -58,24 +58,24 @@
 <p>When estimating elasticity for a notch, <code>bunchr</code> first tries to get an estimate of <span class="math inline">\(\Delta z^*\)</span>, using the amount of bunching and assuming that all that bunching comes from the right side of the distribution. After estimating this <span class="math inline">\(\Delta z^*\)</span>, or being provided one by the user with the <em>force_after</em> option,<code>bunchr</code> finds the elasticity that would equate utilities of this agent at both point: <span class="math inline">\(z^*\)</span> and <span class="math inline">\(z^* + \Delta z^*\)</span>. To do so, it uses the convenient connection between ability and earnings given by the first order condition: <span class="math inline">\(z^* + \Delta z^* = (n^* + \Delta n^*)\cdot (1-t_2)^e\)</span></p>
 <div id="utility-of-marginal-buncher-at-bunch-point-z" class="section level3">
 <h3>Utility of Marginal Buncher at Bunch Point <span class="math inline">\(z^*\)</span></h3>
-\begin{align*}
+<span class="math display">\[\begin{align*}
 u(c,z^*) &amp;= c - \frac{n^* + \Delta n^*}{1+1/e} \cdot \left( \frac{z^*}{n^* + \Delta n^*} \right)^{1+1/e}\\
 &amp;= c - \frac{1}{1+1/e} \cdot (n^* + \Delta n^*)^{-1/e} \cdot \left(z^* \right)^{1+1/e}\\
 &amp;= c - \frac{1}{1+1/e} \cdot \left(\frac{z^*+\Delta z^*}{(1-t_2)^e} \right)^{-1/e} \cdot \left(z^* \right)^{1+1/e}\\
 &amp;= c - \frac{1}{1+1/e} \cdot \frac{(1-t_2)}{(z^*+\Delta z^*)^{1/e}} \cdot \left(z^* \right)^{1+1/e}\\
 &amp;= z^* \cdot (1-t_1) - \frac{1}{1+1/e} \cdot \frac{(1-t_2)}{(z^*+\Delta z^*)^{1/e}} \cdot \left(z^* \right)^{1+1/e}
-\end{align*}
+\end{align*}\]</span>
 </div>
 <div id="utility-of-marginal-buncher-at-tangency-point-z-delta-z" class="section level3">
 <h3>Utility of Marginal Buncher at Tangency Point <span class="math inline">\(z^* + \Delta z^*\)</span></h3>
-\begin{align*}
+<span class="math display">\[\begin{align*}
 u(c, z^* + \Delta z^*) &amp;= c - T -  \frac{n^* + \Delta n^*}{1+1/e} \cdot \left( \frac{z^*+\Delta z^*}{n^* + \Delta n^*} \right)^{1+1/e}\\
 &amp;= c - T - \frac{1}{1+1/e} \cdot (n^* + \Delta n^*)^{-1/e} \cdot \left(z^* + \Delta z^* \right)^{1+1/e}\\
 &amp;= c - T - \frac{1}{1+1/e} \cdot \left(\frac{z^*+\Delta z^*}{(1-t_2)^e} \right)^{-1/e} \cdot \left(z^* + \Delta z^*\right)^{1+1/e}\\
 &amp;= c - T - \frac{1}{1+1/e} \cdot \frac{(1-t_2)}{(z^*+\Delta z^*)^{1/e}} \cdot \left(z^* + \Delta z^* \right)^{1+1/e}\\
 &amp;= c - T - \frac{1}{1+1/e} \cdot (1-t_2) \cdot \left(z^* + \Delta z^* \right)\\
 &amp;= z^* \cdot (1-t_1) + \Delta z^* \cdot (1-t_2) - T - \frac{1}{1+1/e} \cdot (1-t_2) \cdot \left(z^* + \Delta z^* \right)\\
-\end{align*}
+\end{align*}\]</span>
 </div>
 <div id="equating-these-two-we-can-numerically-solve-for-elasticity." class="section level3">
 <h3>Equating these two, we can numerically solve for elasticity.</h3>

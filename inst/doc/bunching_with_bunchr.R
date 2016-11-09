@@ -117,7 +117,7 @@ chetty_res <- chetty_res[order(chetty_res$earnings), ]
 
 ## ----chetty4, eval=TRUE--------------------------------------------------
 estim <- bunch(earning_vec, zstar = 1000, t1 = 0, t2 = 0.2, Tax = 0, 
-               cf_start = 10, cf_end = 10, exlude_before = 1, exclude_after =  1,
+               cf_start = 10, cf_end = 10, exclude_before = 1, exclude_after =  1,
                binw = 50, max_iter = 200, correct = T, select = F, poly_size = 7,
                draw = F)
 # creating comparison data-frame
