@@ -1,4 +1,9 @@
-# bunchr 1.0
+# bunchr 1.0.1
+November 8th, 2016
+
+* Corrected an error in Vignette
+
+# bunchr 1.0.0
 August 8th, 2016
 
 * Added option to force notch size for notch analysis
