@@ -7,7 +7,7 @@
 #'
 #' @section Main functions:
 #'
-#' \code{bunchr} has two main functions:
+#' \code{bunchr} has three main functions:
 #' \describe{
 #'   \item{\code{\link{bunch}}}{is the main function running the actual analysis.}
 #'   \item{\code{\link{bunch_viewer}}}{serves as an aid to the second by visualizing
@@ -16,6 +16,8 @@
 #'  specific bin size, where the counter-factual analysis should be done, and
 #'  the bounds of the excluded area. You can also save the histogram bins and
 #'  counts.}
+#'  \item{\code{\link{bunchApp}}} is an interactive simulator. Use it to
+#'  explore bunching simulation and estimation of earning elasticity.
 #' }
 #'
 #' @seealso \code{\link{bunch}}, \code{\link{bunch_viewer}}
