@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 ```
-The `bunchr` package is meant to help analyze bunching in a labor economics setting. `bunchr` allows easy viewing of bunching histograms, creation of counter-factual
+The `bunchr` package is meant to help analyze bunching in a labor and public economics setting. `bunchr` allows easy viewing of bunching histograms, creation of counter-factual
 distributions, and estimation of the elasticity of earnings w.r.t. the net-of-tax
 rate in __kink__ and __notch__ settings. At the time of writing these lines, I am unaware of any other R package doing so. I hope to keep improving this package so
 it is useful to many researchers.
@@ -34,9 +34,7 @@ above a certain dollar amount, and those who cross that threshold risk losing
 their benefits. This creates a __notch__ in beneficiaries' budget lines, and 
 bunching is expected (and seen) at that earning level.
 
-__Kinks__ and __notches__ create opportunities to measure the earning elasticity
-w.r.t the net-of-tax rate. This parameter is considered sufficient statistic for calculating welfare from changes in tax regimes and welfare programs, and could
-also be used to devise optimal tax rates.
+__Kinks__ and __notches__ create opportunities to measure the earning elasticity w.r.t the net-of-tax rate. This parameter is considered sufficient statistic for calculating welfare from changes in tax regimes and welfare programs, and could also be used to devise optimal tax rates.
 
 
 

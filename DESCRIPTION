@@ -1,7 +1,7 @@
 Package: bunchr
 Type: Package
 Title: Analyze Bunching in a Kink or Notch Setting
-Version: 1.0.1
+Version: 1.1.0
 Authors@R: person("Itai", "Trilnick", email = "itai.trilnick@berkeley.edu",
     role = c("aut", "cre"))
 Maintainer: Itai Trilnick <itai.trilnick@berkeley.edu>
@@ -13,8 +13,11 @@ BugReports: http://github.com/trilnick/bunchr/issues
 License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 5.0.1
-Depends: R (>= 3.3.1)
-Imports: stats, graphics, utils
+Depends: R (>= 3.3.2)
+Imports: stats,
+    graphics,
+    utils,
+    shiny (>= 0.10.2)
 Suggests: knitr,
     rmarkdown,
     testthat,

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Itai Trilnick" />
 
-<meta name="date" content="2016-11-08" />
+<meta name="date" content="2016-12-01" />
 
 <title>Bunching estimation with bunchr</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Bunching estimation with <code>bunchr</code></h1>
 <h4 class="author"><em>Itai Trilnick</em></h4>
-<h4 class="date"><em>2016-11-08</em></h4>
+<h4 class="date"><em>2016-12-01</em></h4>
 
 
 
@@ -82,6 +82,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>When a policy introduces a kink or a notch, a structural analysis can be used to estimate a parameter of interest, such as the elasticity of earnings with respect to marginal tax rates. To do this, a specific function must be assumed for the agents. In many cases, a convenient function for analysis is quasi-linear and iso-elastic.</p>
 <div id="what-can-you-do-with-bunchr" class="section level2">
 <h2>What can you do with <code>bunchr</code>?</h2>
+<p><strong>NEW (Dec. 2016)!</strong> Explore bunching simulations in an interactive interface, using the <em>bunchrApp</em>. After loading the <em>bunchr</em>, run  and start playing.</p>
 <p>The <code>bunchr</code> package can be used to visualize bunching, calculate counter-factual distributions, and estimate the compensated elasticity of earnings w.r.t. marginal tax rates, as usually done in the literature cited above. There is also a function to simulate earnings given certain parameters. <code>bunchr</code>’s language is of earnings and elasticities of earnings, but can be used for other suitable bunching analysis. Indeed, you can provide a title and x-axis label for the output plots.</p>
 <p>Remember that, as usual, more observations are better. Bunching analysis involves the creation of a histogram, similar to a density curve. The narrower the bins of this histogram, the better. Wider bins could bias elasticity estimates. For a kink analysis, the elasticity formula takes into account the extra bunching over the width of the excluded area. Setting bins too wide could attenuate the estimates. For notches, the procedure involves finding the “end” of the notch, where the discontinuity in incentives is no longer relevant. This limit, referred to as <em>delta_zed</em> in the code, is determined in number of bins after the bunching bin. Setting bins too wide limits the set of potential <em>delta_zed</em>, which might bias the estimates.</p>
 <p>Having more observations, one can use narrower bins and still avoid a “jumpy” looking histogram. It is better to have a smoother looking histogram, as the counter-factual histogram for the area of kink or notch is made by interpolation from the area outside of the notch. Smoother histograms make more reliable counter-factuals. As a robustness check for any analysis, I recommend comparing the results of analysis with varying bin widths.</p>

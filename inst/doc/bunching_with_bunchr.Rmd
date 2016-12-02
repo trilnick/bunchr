@@ -54,6 +54,7 @@ agents. In many cases, a convenient function for analysis is quasi-linear and
 iso-elastic.
 
 ## What can you do with `bunchr`?
+__NEW (Dec. 2016)!__ Explore bunching simulations in an interactive interface, using the _bunchrApp_. After loading the _bunchr_, run \code{bunch_sim} and start playing.
 
 The `bunchr` package can be used to visualize bunching, calculate counter-factual
 distributions, and estimate the compensated elasticity of earnings w.r.t. marginal
