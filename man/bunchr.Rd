@@ -23,8 +23,8 @@ the net-of-tax rate.
  specific bin size, where the counter-factual analysis should be done, and
  the bounds of the excluded area. You can also save the histogram bins and
  counts.}
- \item{\code{\link{bunchApp}}} is an interactive simulator. Use it to
- explore bunching simulation and estimation of earning elasticity.
+ \item{\code{\link{bunchApp}}}{is an interactive simulator. Use it to
+ explore bunching simulation and estimation of earning elasticity.}
 }
 }
 \seealso{
