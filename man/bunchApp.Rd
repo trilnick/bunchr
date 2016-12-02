@@ -2,7 +2,7 @@
 % Please edit documentation in R/bunchApp.R
 \name{bunchApp}
 \alias{bunchApp}
-\title{Run bunchr Simulation}
+\title{Run bunchApp: an Interactive Bunching Simulation}
 \usage{
 bunchApp()
 }
