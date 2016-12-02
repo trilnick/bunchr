@@ -8,6 +8,7 @@
 #
 
 library(shiny)
+library(markdown)
 library(bunchr)
 
 # Define UI for application that draws a histogram
@@ -88,7 +89,7 @@ ui <- fluidPage(
     hr(),
     column = 12,
     #add the explanation text below:
-    includeMarkdown(file.path(system.file("bunchApp", "app_readme.md",
+    includeMarkdown(file.path(system.file("bunchApp\\files", "app_readme.md",
                               package = "bunchr")))
   )
 )

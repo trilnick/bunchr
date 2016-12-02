@@ -12,7 +12,7 @@
 #' This simulator is also offered online at \url{https://itrilnick.shinyapps.io/bunchrapp/}.
 #'
 bunchApp <- function() {
-  app.path = file.path(system.file("bunchApp", "bunchApp.R",
+  app.path = file.path(system.file("bunchApp", "app.R",
                                    package = "bunchr"))
   shiny::runApp(app.path)
 }
