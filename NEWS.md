@@ -1,7 +1,7 @@
 # bunchr 1.1.0
 December 1st, 2016
 
-- Added bunchrApp! This Shiny powered app lets you play with bunching simulation on an interactive interface. Play with it to understand the strengths and weaknesses of bunching estimation. The package now imports shiny.
+- Added bunchApp! This Shiny powered app lets you play with bunching simulation on an interactive interface. Play with it to understand the strengths and weaknesses of bunching estimation. The package now imports shiny.
 
 
 # bunchr 1.0.1
