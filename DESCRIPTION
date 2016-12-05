@@ -1,7 +1,7 @@
 Package: bunchr
 Type: Package
 Title: Analyze Bunching in a Kink or Notch Setting
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: person("Itai", "Trilnick", email = "itai.trilnick@berkeley.edu",
     role = c("aut", "cre"))
 Maintainer: Itai Trilnick <itai.trilnick@berkeley.edu>
