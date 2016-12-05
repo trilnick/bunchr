@@ -17,6 +17,7 @@ This function merely runs the app. It accepts no parameters.
 \seealso{
 The machinery behind the simulation: \code{\link{bunch}}
 
-This simulator is also offered online at \url{https://itrilnick.shinyapps.io/bunchrapp/}.
+This simulator is also offered online at
+\url{https://trilnick.shinyapps.io/bunchapp/}.
 }
 
