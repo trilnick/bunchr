@@ -1,3 +1,13 @@
+# bunchr 1.2.0
+January 29st, 2017
+
+- bunchApp feature added: controll level of noise.
+
+# bunchr 1.1.1
+December 1st, 2016
+
+- A little bug fixed
+
 # bunchr 1.1.0
 December 1st, 2016
 
