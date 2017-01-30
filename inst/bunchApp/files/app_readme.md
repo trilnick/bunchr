@@ -13,11 +13,11 @@ An earning vector is simulated using the following parameters:
 
 - **\# Observations**: Choose one. Larger population allows more precise estimates.
 - **Kink Point**: Choose the kink (or notch) point: at what earning level does the Marginal Tax Rate changes, or a one time Tax (such as loss of benefits) is effective.
-- **MTR Before**: Marginal Tax Rate before kink.
-- **MTR After**: Marginal Tax Rate After kink.
+- **Marginal Tax Rate Before**: Marginal Tax Rate before kink.
+- **Marginal Tax Rate After**: Marginal Tax Rate After kink.
 - **Tax at Notch**: one time tax for surpassing the critical earning level.
-- **Elasticity of Earnings w.r.t MTR**: Fixed for everyone.
-- **Add Noise**: Add a random disturbance with mean zero and SD of 50 to the simulated earning vector.
+- **Earning Elasticity w.r.t MTR**: Fixed for everyone.
+- **Noise Standard Deviation**: Random disturbance with mean zero and SD of choice to the simulated earning vector. Can be set to zero.
 
 ### Estimation Parameters
 

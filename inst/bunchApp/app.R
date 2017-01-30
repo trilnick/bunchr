@@ -32,13 +32,13 @@ ui <- fluidPage(
                   min = 1,
                   max = 5000),
       sliderInput("t1",
-                 "MTR Before:",
+                 "Marginal Tax Rate Before:",
                  min = 0,
                  max = 0.9,
                  value = 0.1,
                  step = 0.1),
       sliderInput("t2",
-                   "MTR After:",
+                   "Marginal Tax Rate After:",
                    min = 0,
                    max = 0.9,
                    value = 0.3,
@@ -48,51 +48,83 @@ ui <- fluidPage(
                    min = 0,
                    max = 5000),
       sliderInput("elas",
-                   "Elasticity of Earnings w.r.t MTR:",
+                   "Earning Elasticity w.r.t MTR:",
                    min = 0,
                    max = 1.5,
                    value = 0.2,
                    step = 0.1),
-      checkboxInput("noise", label = "Add Noise", value = TRUE),
-      br(),
-      hr(),
-      h3(textOutput("caption"), style = "color:blue"),
-      h3(textOutput("est.elas"), style = "color:blue")
+      #checkboxInput("noise", label = "Add Noise", value = TRUE),
+      #selectInput("noise", label = ("Noise"),
+      #            choices = list("No Noise" = 0,
+      #                           "SD = 50" = 1,
+      #                           "SD = 100" = 2,
+      #                           "SD = 200" = 4),
+      #            selected = 1),
+      #radioButtons("noise", label = "Noise SD",
+      #             choices = list("0" = 0,
+      #                            "50" = 1,
+      #                            "100" = 2,
+      #                            "200" = 4),
+      #             inline = TRUE,
+      #             selected = 1),
+      sliderInput("noise",
+                  "Noise Standard Deviation:",
+                  min = 0,
+                  max = 500,
+                  value = 50,
+                  step = 50)
       ),
 
-      # Show a plot of the generated distribution
+     # Show a plot of the generated distribution
      mainPanel(
       plotOutput("plot_1"),
 
       hr(),
 
-      column(4,
-          br(),
+      fluidRow(
+        column(width = 4,
           sliderInput("binw",
-                    "Bin Width:",
-                    min = 1,
-                    max = 100,
-                    value = 40),
-        radioButtons("sumzero", label = "Sum Zero Integral",
-                     choices = list("Yes" = 1, "No" = 2),
-                     selected = 1)
+                      "Bin Width:",
+                      min = 1,
+                      max = 100,
+                      value = 40)),
+        column(width = 8,
+               uiOutput("uiCF")
+               )
       ),
-      column(8,
-          uiOutput("uiCF"),
-          uiOutput("uiEX")
+
+      fluidRow(
+        column(width = 4,
+               radioButtons("sumzero", label = "Sum Zero Integral",
+                            choices = list("Yes" = 1, "No" = 2), inline = TRUE,
+                            selected = 1)
+               ),
+        column(width = 8,
+               uiOutput("uiEX")
+              )
       )
      )
-  ),
+   ),
 
+  fluidRow(
+    column(width = 4,
+           h3(textOutput("caption"), style = "color:blue")
+           ),
+    column(width = 8,
+           h3(textOutput("est.elas"), style = "color:blue")
+           )
+  ),
 
   fluidRow(
     hr(),
-    column = 12,
     #add the explanation text below:
-    includeMarkdown(file.path(system.file("bunchApp\\files", "app_readme.md",
-                              package = "bunchr")))
-  )
+    column(width = 12,
+           includeMarkdown(file.path(system.file("bunchApp\\files", "app_readme.md",
+                           package = "bunchr")))
+          )
+    )
 )
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -103,7 +135,8 @@ server <- function(input, output) {
   })
 
   noise_vec <- reactive({
-    rnorm(n = input$numobs, mean = 0, sd = 50)
+    #rnorm(n = input$numobs, mean = 0, sd = 50)
+    rnorm(n = input$numobs, mean = 0, sd = 1)
   })
 
 
@@ -136,7 +169,7 @@ server <- function(input, output) {
             exclude_after = input$excluded_zone[2],
             correct = switch(input$sumzero, "1" = TRUE, "2" = FALSE),
             force_after = switch(input$sumzero, "1" = FALSE, "2" = TRUE),
-            title = paste0("Earning Simulation: n = ", input$numobs)),
+            title = paste0("Earning Simulation: N = ", input$numobs)),
          "TRUE" = bunchr::bunch_viewer(earning_vec(),
             input$zstar,
             cf_start = -input$cf_zone[1],
@@ -144,7 +177,7 @@ server <- function(input, output) {
             exclude_before = -input$excluded_zone[1],
             exclude_after = input$excluded_zone[2],
             binw = input$binw,
-            title = paste0("Earning Simulation: n = ", input$numobs),
+            title = paste0("Earning Simulation: N = ", input$numobs),
             varname = "Earnings")
        )
     })
