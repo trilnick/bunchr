@@ -33,4 +33,3 @@ The utility of earning sum z given other parameters.
 util_calc(900, 950, 0.2, 0.1, 0.2, 100, 1000)
 
 }
-

@@ -1,6 +1,5 @@
 ## Test environments
-* local OS Windows 10, R version 3.3.2
-* ubuntu 12.04.5 (on travis-ci), R version 3.3.2
+* local OS Windows 10, R version 4.3.1
 
 ## R CMD check results
 No errors, warnings, or notes

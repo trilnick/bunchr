@@ -37,4 +37,3 @@ util_equalizer(1200,0.2,0.1,0.3,100,1000)
 \seealso{
 \code{\link{util_calc}}
 }
-

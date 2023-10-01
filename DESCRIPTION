@@ -2,7 +2,7 @@ Package: bunchr
 Type: Package
 Title: Analyze Bunching in a Kink or Notch Setting
 Version: 1.2.0
-Authors@R: person("Itai", "Trilnick", email = "itai.trilnick@berkeley.edu",
+Authors@R: person("Itai", "Trilnick", email = "itai.trilnick@gmail.com",
     role = c("aut", "cre"))
 Maintainer: Itai Trilnick <itai.trilnick@berkeley.edu>
 Description: View and analyze data where bunching is expected. Estimate counter-
@@ -11,8 +11,9 @@ Description: View and analyze data where bunching is expected. Estimate counter-
 URL: http://github.com/trilnick/bunchr
 BugReports: http://github.com/trilnick/bunchr/issues
 License: MIT + file LICENSE
+Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 7.2.3
 Depends: R (>= 3.3.1)
 Imports: stats,
     graphics,
