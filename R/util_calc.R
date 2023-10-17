@@ -28,8 +28,16 @@ util_calc <- function(z, n, elas, t1, t2, Tax, zstar) {
     stop("Earnings, ability and zstar need to be non-negative")
   }
   ## ---------------------------------------------------------------------------
+  # We let people bunch on the notch/kink point. For downward notches, tax is
+  # applied when surpassing zstar. For upward notches, reward is applied when
+  # reaching zstar.
+  if (Tax >= 0) {
+    condition <- z <= zstar
+  } else {
+    condition <- z < zstar
+  }
   # Utility for earnings below notch/kink threshold
-  if (z <= zstar) {
+  if (condition) {
     return(z - (t1 * z) - ((n/(1 + (1/elas))) * ((z/n)^(1 + (1/elas)))))
   }
   # Utility for earnings above notch/kink threshold

@@ -28,14 +28,14 @@
 #'  histogram? See details.
 #' @param draw Should a graph be drawn?
 #' @param title Title for plot output
-#' @param varname Name for running variable, to be desplayed in the plot
+#' @param varname Name for running variable, to be displayed in the plot
 #'
 #' @details A histogram is created from the earnings vector, with the kink
 #' point zstar as the center of one of the bins.
 #'
-#' For "unpure" notches, where the marginal tax rate after the notch is different
+#' For "impure" notches, where the marginal tax rate after the notch is different
 #' than the one before it, this function disregards the shifting of post-notch
-#' distribution to the right, as suggested by Kleven (2016). Asssumption is that
+#' distribution to the right, as suggested by Kleven (2016). Assumption is that
 #' the notch effect is much stronger anyway.
 #'
 #' Model selection works using the \code{step} function from the stats package.
@@ -49,7 +49,7 @@
 #' the sum of ``missing'' counts from the notch point to the notch size.
 #' \code{notch_estimator} goes through an iterative process to find a stable
 #' right-side boundary, labels it \emph{notch_size} and returns it. However, the
-#' user might want to force a visibly detectible end of notch, rather than let
+#' user might want to force a visibly detectable end of notch, rather than let
 #' \code{notch_estimator} calculate one. Use this option with caution: the notch
 #' size is then used to calculate elasticity. For calculating intensive margin
 #' elasticities, excess bunching must all come from other bins. Thus, total sums
@@ -162,7 +162,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   # add a factor variable to reg_data, indicating excluded bins
   # all non-excluded bins will be "1".
   # the excluded bins will start at "2".
-  reg_data$excluded <- as.numeric(!reg_data$mid %in% excluded_list)
+  reg_data$excluded <- as.numeric(!(reg_data$mid %in% excluded_list))
   for (i in excluded_list) {
     reg_data$excluded[reg_data$mid == i] <- 1 + which(excluded_list == i)
   }

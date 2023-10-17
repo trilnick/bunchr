@@ -28,18 +28,37 @@ earning_fun <- function(n, elas, t1, t2, Tax, zstar) {
     stop("Ability and zstar need to be non-negative")
   }
   ## ---------------------------------------------------------------------------
-  # calculate counter-factual earnings
-  z <- n * ((1 - t1) ^ (elas))
-  # people whose counter-factual is below the kink/notch anyway
-  if (z <= zstar) {
-    return(z)
+  # Case one: positive or zero notch
+  if (Tax >=0){
+    # calculate counter-factual earnings
+    z <- n * ((1 - t1) ^ (elas))
+    # people whose counter-factual is below the kink/notch anyway
+    if (z <= zstar) {
+      return(z)
+    }
+    # people whose counter-factual is above the kink/notch
+    z <- n * ((1 - t2) ^ (elas))
+    #
+    # return the earnings that maximize utility: tangent or kink/notch point
+    # if agent is indifferent, they bunch.
+    ifelse(util_calc(zstar,n,elas,t1,t2,Tax,zstar) >=
+             util_calc(z,n,elas,t1,t2,Tax,zstar),
+           return(zstar),
+           return(n*((1-t2)^(elas))))
+  } else {
+    # Case 2: negative tax (upward notch)
+    # default counter factual earning based on FOC
+    z <- n * ((1 - t2) ^ (elas))
+    if (z > zstar) {
+      return(z)
+    }
+    # people whose counter-factual is below or at the kink/notch
+    z <- n * ((1 - t1) ^ (elas))
+    # return the earnings that maximize utility: tangent or kink/notch point
+    # if agent is indifferent, they bunch.
+    ifelse(util_calc(zstar,n,elas,t1,t2,Tax,zstar) >=
+             util_calc(z,n,elas,t1,t2,Tax,zstar),
+           return(zstar),
+           return(n*((1-t1)^(elas))))
   }
-  # people whose counter-factual is above the kink/notch
-  z <- n * ((1 - t2) ^ (elas))
-  #
-  # return the earnings that maximize utility: tangency or kink/notch point
-  # if agent is indifferent, they bunch.
-  ifelse(util_calc(zstar,n,elas,t1,t2,Tax,zstar) >= util_calc(z,n,elas,t1,t2,Tax,zstar),
-         return(zstar),
-         return(n*((1-t2)^(elas))))
 }
