@@ -28,10 +28,10 @@ Below are a few words about bunching analysis, kinks, and notches. For more info
 In many cases, tax and welfare programs have points where incentives change in 
 such way that people are expected to bunch at one side of point. For example, 
 people are expected to bunch at the point where income tax rates increase, 
-creating a __kink__ in agents' budget lines. In another case, beneficiaries of 
+creating a __kink__ in their budget lines. In another case, beneficiaries of 
 Social Security Disability Insurance in the US are not allowed to work and earn 
-above a certain dollar amount, and those who cross that threshold risk losing 
-their benefits. This creates a __notch__ in beneficiaries' budget lines, and 
+above a certain dollar amount, and those who cross that threshold risk losing all 
+their benefits. This creates a __notch__ in their budget lines, and 
 bunching is expected (and seen) at that earning level.
 
 __Kinks__ and __notches__ create opportunities to measure the earning elasticity w.r.t the net-of-tax rate. This parameter is considered sufficient statistic for calculating welfare from changes in tax regimes and welfare programs, and could also be used to devise optimal tax rates.
