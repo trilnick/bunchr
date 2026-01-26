@@ -1,3 +1,10 @@
+# bunchr 1.2.1
+January 25, 2026
+
+- A few updates.
+- Fixed a latex escaped character issue.
+- Moved maintainer email to personal Gmail.
+
 # bunchr 1.2.0
 January 29st, 2017
 

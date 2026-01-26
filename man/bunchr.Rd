@@ -2,8 +2,8 @@
 % Please edit documentation in R/bunchr.R
 \docType{package}
 \name{bunchr}
-\alias{bunchr}
 \alias{bunchr-package}
+\alias{bunchr}
 \title{bunchr: A Package for Bunching Analysis}
 \description{
 The \code{bunchr} package is meant to help analyze bunching. Given a vector
@@ -18,7 +18,7 @@ the net-of-tax rate.
 \describe{
   \item{\code{\link{bunch}}}{is the main function running the actual analysis.}
   \item{\code{\link{bunch_viewer}}}{serves as an aid to the second by visualizing
- some of theuser-specified options without running an analysis. Use it to see
+ some of the user-specified options without running an analysis. Use it to see
  what the histogram of your earnings vector looks like when setting
  specific bin size, where the counter-factual analysis should be done, and
  the bounds of the excluded area. You can also save the histogram bins and
@@ -27,7 +27,11 @@ the net-of-tax rate.
  explore bunching simulation and estimation of earning elasticity.}
 }
 }
+
 \seealso{
 \code{\link{bunch}}, \code{\link{bunch_viewer}}
 }
+\author{
+\strong{Maintainer}: Itai Trilnick \email{itai.trilnick@gmail.com}
 
+}

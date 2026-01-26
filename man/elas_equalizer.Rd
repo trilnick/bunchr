@@ -18,7 +18,7 @@ elas_equalizer(elas, t1, t2, Tax, zstar, delta_zed, binw)
 
 \item{zstar}{Place of notch/kink (critical earning point)}
 
-\item{delta_zed}{The notch size}
+\item{delta_zed}{The notch size in bin units}
 
 \item{binw}{Bin width}
 }
@@ -34,7 +34,9 @@ elasticity of the marginal buncher. See equations (3) and (4) at Kelven and
 Waseem (2013)
 }
 \examples{
-elas_equalizer(0.2, 0.1, 0.2, 100, 1000, 200, 20)
+elas_equalizer(0.2, 0.1, 0.2, 100, 1000, 20, 10)
+# The elasticity value to minimize this is ~0.0716:
+elas_equalizer(0.0716, 0.1, 0.2, 100, 1000, 20, 10)
 
 }
 \references{
@@ -42,4 +44,3 @@ Kleven, H. and Waseem, Mazhar (2013) \emph{Using notches to
 uncover optimization frictions and structural elasticities: Theory and
 evidence from Pakistan}, The Quarterly Journal of Economics 128(2)
 }
-

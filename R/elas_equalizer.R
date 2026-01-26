@@ -13,7 +13,7 @@
 #' @param t2 Tax rate after notch/kink
 #' @param Tax Height of notch (zero for pure kink)
 #' @param zstar Place of notch/kink (critical earning point)
-#' @param delta_zed The notch size
+#' @param delta_zed The notch size in bin units
 #' @param binw Bin width
 #'
 #' @return Absolute value of utility at \eqn{zstar+delta_zed} minus utility at
@@ -24,7 +24,9 @@
 #' evidence from Pakistan}, The Quarterly Journal of Economics 128(2)
 #'
 #' @examples
-#' elas_equalizer(0.2, 0.1, 0.2, 100, 1000, 200, 20)
+#' elas_equalizer(0.2, 0.1, 0.2, 100, 1000, 20, 10)
+#' # The elasticity value to minimize this is ~0.0716:
+#' elas_equalizer(0.0716, 0.1, 0.2, 100, 1000, 20, 10)
 #'
 #' @export
 #'

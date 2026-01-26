@@ -337,7 +337,7 @@ their _Stata_ code, which was used for kink analysis, and I will use it to valid
 _bunchr_ for kinks. Unfortunately, I cannot use it with the original administrative
 data used by the researchers. However, I can run a simulation and test for
 similarity in results. The _Stata_ program was written by Tore Olsen,
-and can be found in Raj Chetty's [website](<http://www.rajchetty.com/chettyfiles/bunch_count.zip>).
+and can be found in Raj Chetty's [website](<https://rajchetty.com/publication/adjustment-costs-firm-responses-and-micro-vs-macro-labor-supply-elasticities-evidence-from-danish-tax-records/bunch_count-zip/>).
 To replicate these results, you will need a copy of _Stata_ of course. Download
 and install the `bunch_count` function for _Stata_, and define the working
 directories properly.

@@ -4,12 +4,30 @@
 \alias{bunch}
 \title{Bunching Analysis}
 \usage{
-bunch(earnings, zstar, t1, t2, Tax = 0, cf_start = NA, cf_end = NA,
-  exclude_before = NA, exclude_after = NA, force_after = FALSE,
-  binw = 10, poly_size = 7, convergence = 0.01, max_iter = 100,
-  correct = TRUE, select = TRUE, draw = TRUE, nboots = 0, seed = NA,
-  progress = FALSE, title = "Bunching Visualization",
-  varname = "Earnings")
+bunch(
+  earnings,
+  zstar,
+  t1,
+  t2,
+  Tax = 0,
+  cf_start = NA,
+  cf_end = NA,
+  exclude_before = NA,
+  exclude_after = NA,
+  force_after = FALSE,
+  binw = 10,
+  poly_size = 7,
+  convergence = 0.01,
+  max_iter = 100,
+  correct = TRUE,
+  select = TRUE,
+  draw = TRUE,
+  nboots = 0,
+  seed = NA,
+  progress = FALSE,
+  title = "Bunching Visualization",
+  varname = "Earnings"
+)
 }
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one.}
@@ -102,4 +120,3 @@ estim$e
 \seealso{
 \code{\link{kink_estimator}}, \code{\link{notch_estimator}}
 }
-

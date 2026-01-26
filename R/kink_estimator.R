@@ -45,12 +45,12 @@
 #'   \item{\code{Bn}}{The sum of total estimated extra bunching in the excluded
 #'   bins}
 #'   \item{\code{b}}{The rate of extra bunching in the excluded area, divided by
-#'   the length of area in \$}
+#'   the length of area in $}
 #'   \item{\code{data}}{A data frame with bin mids, counts, counter-factual
 #'   counts, and excluded dummy}
 #' }
 #'
-#' @references Chetty, R., Friedman, J., Olsen, T., Pistaferri, L. (2009)
+#' @references Chetty, R., Friedman, J., Olsen, T., Pistaferri, L. (2011)
 #' \emph{Adjustment Costs, Firm Responses, and Micro vs. Macro Labor Supply
 #' Elasticities: Evidence from Danish Tax Records}, Quarterly Journal of
 #'  Economics, 126(2).

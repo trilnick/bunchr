@@ -4,11 +4,26 @@
 \alias{notch_estimator}
 \title{Analyzing Bunching at a Notch}
 \usage{
-notch_estimator(earnings, zstar, t1, t2, Tax = 0, cf_start = NA,
-  cf_end = NA, exclude_before = NA, exclude_after = NA,
-  force_after = FALSE, binw = 10, poly_size = 7, convergence = 0.01,
-  max_iter = 100, select = TRUE, draw = TRUE,
-  title = "Bunching Visualization", varname = "Earnings")
+notch_estimator(
+  earnings,
+  zstar,
+  t1,
+  t2,
+  Tax = 0,
+  cf_start = NA,
+  cf_end = NA,
+  exclude_before = NA,
+  exclude_after = NA,
+  force_after = FALSE,
+  binw = 10,
+  poly_size = 7,
+  convergence = 0.01,
+  max_iter = 100,
+  select = TRUE,
+  draw = TRUE,
+  title = "Bunching Visualization",
+  varname = "Earnings"
+)
 }
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one}
@@ -52,7 +67,7 @@ histogram? See details.}
 
 \item{title}{Title for plot output}
 
-\item{varname}{Name for running variable, to be desplayed in the plot}
+\item{varname}{Name for running variable, to be displayed in the plot}
 }
 \value{
 \code{notch_estimator } returns a list of the following variables:
@@ -75,9 +90,9 @@ through the \code{bunch} function.
 A histogram is created from the earnings vector, with the kink
 point zstar as the center of one of the bins.
 
-For "unpure" notches, where the marginal tax rate after the notch is different
+For "impure" notches, where the marginal tax rate after the notch is different
 than the one before it, this function disregards the shifting of post-notch
-distribution to the right, as suggested by Kleven (2016). Asssumption is that
+distribution to the right, as suggested by Kleven (2016). Assumption is that
 the notch effect is much stronger anyway.
 
 Model selection works using the \code{step} function from the stats package.
@@ -91,7 +106,7 @@ the sum of the ``excess'' counts, from the left side to the notch point, and
 the sum of ``missing'' counts from the notch point to the notch size.
 \code{notch_estimator} goes through an iterative process to find a stable
 right-side boundary, labels it \emph{notch_size} and returns it. However, the
-user might want to force a visibly detectible end of notch, rather than let
+user might want to force a visibly detectable end of notch, rather than let
 \code{notch_estimator} calculate one. Use this option with caution: the notch
 size is then used to calculate elasticity. For calculating intensive margin
 elasticities, excess bunching must all come from other bins. Thus, total sums
@@ -114,4 +129,3 @@ Kleven, H J (2016). \emph{Bunching}, Annual Review of Economics,
 \seealso{
 \code{\link{bunch}}, \code{\link{kink_estimator}}
 }
-

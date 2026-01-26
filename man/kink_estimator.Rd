@@ -4,10 +4,25 @@
 \alias{kink_estimator}
 \title{Analyzing Bunching at a Kink}
 \usage{
-kink_estimator(earnings, zstar, t1, t2, cf_start = NA, cf_end = NA,
-  exclude_before = 2, exclude_after = 2, binw = 10, poly_size = 7,
-  convergence = 0.01, max_iter = 100, correct = TRUE, select = TRUE,
-  draw = TRUE, title = "Bunching Visualization", varname = "Earnings")
+kink_estimator(
+  earnings,
+  zstar,
+  t1,
+  t2,
+  cf_start = NA,
+  cf_end = NA,
+  exclude_before = 2,
+  exclude_after = 2,
+  binw = 10,
+  poly_size = 7,
+  convergence = 0.01,
+  max_iter = 100,
+  correct = TRUE,
+  select = TRUE,
+  draw = TRUE,
+  title = "Bunching Visualization",
+  varname = "Earnings"
+)
 }
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one.}
@@ -57,7 +72,7 @@ histogram? See details.}
   \item{\code{Bn}}{The sum of total estimated extra bunching in the excluded
   bins}
   \item{\code{b}}{The rate of extra bunching in the excluded area, divided by
-  the length of area in \$}
+  the length of area in $}
   \item{\code{data}}{A data frame with bin mids, counts, counter-factual
   counts, and excluded dummy}
 }
@@ -87,7 +102,7 @@ kink_estimator(earning_vec, 1000, 0, 0.2, 40, 40, 1, 1, binw = 10, draw = FALSE)
 
 }
 \references{
-Chetty, R., Friedman, J., Olsen, T., Pistaferri, L. (2009)
+Chetty, R., Friedman, J., Olsen, T., Pistaferri, L. (2011)
 \emph{Adjustment Costs, Firm Responses, and Micro vs. Macro Labor Supply
 Elasticities: Evidence from Danish Tax Records}, Quarterly Journal of
  Economics, 126(2).
@@ -95,4 +110,3 @@ Elasticities: Evidence from Danish Tax Records}, Quarterly Journal of
 \seealso{
 \code{\link{bunch}}, \code{\link{notch_estimator}}
 }
-

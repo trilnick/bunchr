@@ -1,8 +1,9 @@
-#' Analyzing Bunching at a Notch
+#' Analyzing Bunching at an upward Notch
 #'
-#' Given a kinked budget set, this function gets a vector of earnings and
-#' analyzes bunching. This function could be run independently, but best used
-#' through the \code{bunch} function.
+#' See the \code{notch_estimator} function for details in the "classic" case of downward notch (e.g. losing benefits after an earning threshold). This
+#' function does calculations for an upward notch (e.g. bonus after reaching an
+#' earning target). The mechanics are the same but the signs
+#' are opposite and the notch is to the left of zstar.
 #'
 #' @param earnings Vector of earnings, hopefully a very large one
 #' @param zstar Place of kink (critical earning point)
@@ -28,7 +29,7 @@
 #'  histogram? See details.
 #' @param draw Should a graph be drawn?
 #' @param title Title for plot output
-#' @param varname Name for running variable, to be displayed in the plot
+#' @param varname Name for running variable, to be desplayed in the plot
 #'
 #' @details A histogram is created from the earnings vector, with the kink
 #' point zstar as the center of one of the bins.
@@ -88,7 +89,7 @@
 
 
 
-notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
+.upward_notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
                             cf_start = NA, cf_end = NA,
                             exclude_before = NA, exclude_after = NA, force_after = FALSE,
                             binw = 10, poly_size = 7, convergence = 0.01,
@@ -100,16 +101,16 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
     warning("Input for notch is zero")
   }
   if (is.na(cf_start)) {
-    cf_start <- 20
-    warning("cf_start not specified, using 20 bins as default")
+    cf_start <- 100
+    warning("cf_start not specified, using 100 bins as default")
   }
   if (is.na(cf_end)) {
-    cf_end <- 100
-    warning("cf_end not specified, using 100 bins as default")
+    cf_end <- 20
+    warning("cf_end not specified, using 20 bins as default")
   }
   if (is.na(exclude_before)) {
-    exclude_before <- 10
-    warning("exclude_before not specified, using 10 bins as default")
+    exclude_after <- 10
+    warning("exclude_after not specified, using 10 bins as default")
   }
   if (!is.logical(force_after)) {
     stop("force_after must be TRUE or FALSE")
@@ -148,11 +149,11 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
 
   # need to figure counter factual in the hole.
   # allow for user input
-  if (is.na(exclude_after)) {
-    warning("exclude_after not specified, using 30% of cf_end")
+  if (is.na(exclude_before)) {
+    warning("exclude_before not specified, using 30% of cf_before")
     # calculate the top 30% area before cf_end
-    useful_calc <- ceiling (0.3 * cf_end)
-    exclude_after <- cf_end - useful_calc
+    useful_calc <- ceiling (0.3 * cf_start)
+    exclude_before <- cf_start - useful_calc
   }
 
   ## define the bins to exclude (the bunching bins)
@@ -162,11 +163,14 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   # add a factor variable to reg_data, indicating excluded bins
   # all non-excluded bins will be "1".
   # the excluded bins will start at "2".
+  # Note for upward kink, we iterate backwards, so we need to reverse
+  # the order of these excluded bins. That's what the rev does.
   reg_data$excluded <- as.numeric(!(reg_data$mid %in% excluded_list))
   for (i in excluded_list) {
-    reg_data$excluded[reg_data$mid == i] <- 1 + which(excluded_list == i)
+    reg_data$excluded[reg_data$mid == i] <- 1 + which(rev(excluded_list) == i)
   }
   # make the "excluded" variable a factor
+  # DANGER: THE PREVIOUS VERSION HAS LISTED FACTORS
   reg_data$excluded <- as.factor(reg_data$excluded)
   # We need a column of all non-excluded for predicting counter-factual
   cheat_excluded <- data.frame(as.factor(c(rep("1",dim(reg_data)[1]))))
@@ -200,8 +204,8 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   naive_B <- sum(reg_naive$coefficients[2:(length(excluded_list) + 1)])
 
   # initial "guess" for sum bunching uses coefficients from reg_naive, but sums
-  # only until one after zstar. Should be positive
-  bunch_sum <- sum(reg_naive$coefficients[2:(2 + exclude_before + 1)])
+  # only until one before zstar. Should be positive
+  bunch_sum <- sum(reg_naive$coefficients[2:(2 + exclude_after + 1)])
   if (bunch_sum < 0) {
     stop("Something is wrong: first bin of the hole seems larger than the extra
         bunching at the notch point!
@@ -219,7 +223,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   # 2) updating excluded after as midway between delta-zed and former excluded after.
 
   # start with initial guess: delta zed
-  delta_zed <- exclude_after
+  delta_zed <- exclude_before
   new_delta_zed <- 0
   counter <- 1
   while (abs(new_delta_zed - delta_zed) / delta_zed > convergence &
@@ -232,10 +236,11 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
     # make tentative excluded bin list.
     # plus "change" of 10 bins just in case we fall in the hole
     temp_excluded_v <- excluded_list[1:(exclude_before + 1 + delta_zed + 10)]
+    temp_excluded_v <- temp_excluded_v[!is.na(temp_excluded_v)]
     # make it a factor variable again
-    reg_data$temp_excluded <- as.numeric(!reg_data$mid %in% temp_excluded_v)
-    for (i in temp_excluded_v[!is.na(temp_excluded_v)]) {
-      reg_data$temp_excluded[reg_data$mid == i] <- 1 + which(temp_excluded_v == i)
+    reg_data$temp_excluded <- as.numeric(!(reg_data$mid %in% temp_excluded_v))
+    for (i in temp_excluded_v) {
+      reg_data$temp_excluded[reg_data$mid == i] <- 1 + which(rev(temp_excluded_v) == i)
     }
     reg_data$temp_excluded <- as.factor(reg_data$temp_excluded)
 
@@ -254,7 +259,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
     reg_data$cf_counts <- stats::predict(temp_reg,cbind(reg_data[,c(1,3)],cheat_excluded))
     # Start summing up the differences between CF and actual counts. When you get
     # to zero, that's delta zed. You could just sum the coefficients for dummies
-    # of excluded bins, but this way delta zed can exten further the excluded bin
+    # of excluded bins, but this way delta zed can extend further the excluded bin
     # limit.
 
     # create vector of differences:
@@ -263,23 +268,25 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
                         (reg_data$mid <= zstar + exclude_after * binw)] -
       reg_data$cf_counts[(reg_data$mid >= zstar - exclude_before * binw) &
                            (reg_data$mid <= zstar + exclude_after * binw)]
-    # Sum these differences until you reach zero on the right side of notch
+    # Sum these differences until you reach zero on the left side of notch
+    # this means reversing the difference vector in an upward notch!
+    diff_vec <- rev(diff_vec)
     bunch_sum <- diff_vec[1]
     i <- 2
-    while( (bunch_sum[i-1] > 0 | i < (exclude_before + 2) ) &
-           ( i < (exclude_after + 1) ) ) {
+    while( (bunch_sum[i-1] > 0 | i < (exclude_after + 2) ) &
+           ( i < (exclude_before + 1) ) ) {
       bunch_sum[i] <- bunch_sum[i-1] +  diff_vec[i]
       i <- i+1
     }
 
     # setting the new delta zed:
-    new_delta_zed <- i - 1 - exclude_before - 1
+    new_delta_zed <- i - 1 - exclude_after - 1
     counter <- counter+1
   }
 
   if (force_after==FALSE) {
-    if (i >= cf_end) {
-      stop("Something is wrong, try extending CF range to the right.")
+    if (i >= cf_start) {
+      stop("Something is wrong, try extending CF range to the left")
     }
   }
 

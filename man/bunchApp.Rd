@@ -20,4 +20,3 @@ The machinery behind the simulation: \code{\link{bunch}}
 This simulator is also offered online at
 \url{https://trilnick.shinyapps.io/bunchapp/}.
 }
-

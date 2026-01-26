@@ -11,7 +11,7 @@
 #' \describe{
 #'   \item{\code{\link{bunch}}}{is the main function running the actual analysis.}
 #'   \item{\code{\link{bunch_viewer}}}{serves as an aid to the second by visualizing
-#'  some of theuser-specified options without running an analysis. Use it to see
+#'  some of the user-specified options without running an analysis. Use it to see
 #'  what the histogram of your earnings vector looks like when setting
 #'  specific bin size, where the counter-factual analysis should be done, and
 #'  the bounds of the excluded area. You can also save the histogram bins and
@@ -22,7 +22,6 @@
 #'
 #' @seealso \code{\link{bunch}}, \code{\link{bunch_viewer}}
 #'
-#' @docType package
 #' @name bunchr
 #'
-NULL
+"_PACKAGE"

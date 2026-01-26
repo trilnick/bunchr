@@ -4,9 +4,19 @@
 \alias{bunch_viewer}
 \title{Visualizing a histogram and potential excluded areas}
 \usage{
-bunch_viewer(earnings, zstar = NA, cf_start = 10, cf_end = 50,
-  exclude_before = 2, exclude_after = 20, binw = NA, trimy = TRUE,
-  report = FALSE, title = "Count Histogram", varname = "Running Variable")
+bunch_viewer(
+  earnings,
+  zstar = NA,
+  cf_start = 10,
+  cf_end = 50,
+  exclude_before = 2,
+  exclude_after = 20,
+  binw = NA,
+  trimy = TRUE,
+  report = FALSE,
+  title = "Count Histogram",
+  varname = "Running Variable"
+)
 }
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one}
@@ -52,4 +62,3 @@ bunch_viewer(earning_vec, 1000, 20, 40, 2, 2, 20, trimy = TRUE, report = FALSE)
 \seealso{
 \code{\link{bunch}}
 }
-

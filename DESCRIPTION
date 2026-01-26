@@ -1,19 +1,19 @@
 Package: bunchr
 Type: Package
 Title: Analyze Bunching in a Kink or Notch Setting
-Version: 1.2.0
+Version: 1.2.1
 Authors@R: person("Itai", "Trilnick", email = "itai.trilnick@gmail.com",
     role = c("aut", "cre"))
-Maintainer: Itai Trilnick <itai.trilnick@berkeley.edu>
+Maintainer: Itai Trilnick <itai.trilnick@gmail.com>
 Description: View and analyze data where bunching is expected. Estimate counter-
     factual distributions. For earnings data, estimate the compensated
     elasticity of earnings w.r.t. the net-of-tax rate.
-URL: http://github.com/trilnick/bunchr
-BugReports: http://github.com/trilnick/bunchr/issues
+URL: https://github.com/trilnick/bunchr
+BugReports: https://github.com/trilnick/bunchr/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3
 Depends: R (>= 3.3.1)
 Imports: stats,
     graphics,
