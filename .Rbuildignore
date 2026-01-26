@@ -4,3 +4,5 @@
 ^.\*.Rmd
 ^\rev*
 ^\\.git$
+^README.Rmd$
+^revdep$
