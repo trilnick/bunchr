@@ -28,27 +28,27 @@ notch_estimator(
 \arguments{
 \item{earnings}{Vector of earnings, hopefully a very large one}
 
-\item{zstar}{Place of kink (critical earning point)}
+\item{zstar}{Place of notch (critical earning point)}
 
-\item{t1}{Tax rate before kink}
+\item{t1}{Tax rate before notch}
 
-\item{t2}{Tax rate after kink}
+\item{t2}{Tax rate after notch}
 
-\item{Tax}{"Penalty" tax for crossing zstar.}
+\item{Tax}{Lump sum penalty for crossing zstar.}
 
-\item{cf_start}{Number of bins before the kink bin where counter-factual
+\item{cf_start}{Number of bins before the notch bin where counter-factual
 histogram should start.}
 
-\item{cf_end}{Number of bins after the kink bin where counter-factual
+\item{cf_end}{Number of bins after the notch bin where counter-factual
 histogram should start.}
 
-\item{exclude_before}{Number of excluded bins before the kink bin.}
+\item{exclude_before}{Number of excluded bins before the notch bin.}
 
-\item{exclude_after}{Number of excluded bins after the kink bin.}
+\item{exclude_after}{Number of excluded bins after the notch bin.}
 
 \item{force_after}{Should \code{bunch} be forced to use of the provided
-\emph{exclude_after} for the end of the bunching, rather than trying to find
-the bin where the sum of the integral is zero? See details.}
+\emph{exclude_after} for the end of the bunching, rather than trying to
+find the bin where the sum of the integral is zero? See details.}
 
 \item{binw}{Bin width.}
 
@@ -82,37 +82,45 @@ histogram? See details.}
 }
 }
 \description{
-Given a kinked budget set, this function gets a vector of earnings and
+Given a notched budget set, this function gets a vector of earnings and
 analyzes bunching. This function could be run independently, but best used
 through the \code{bunch} function.
 }
 \details{
-A histogram is created from the earnings vector, with the kink
-point zstar as the center of one of the bins.
+By default, \code{notch_estimator} will try to find the end of the notch,
+  i.e. a histogram bin where the incentive to bunch wears off. To do this,
+  a counter factual distribution is interpolated using the bins inside the
+  counter-factual area but outside of the excluded area. This is assumed to be
+  the histogram we would have without the tax at the notch point. At the
+  observed bunching area, the bins should be much greater than their
+  corresponding counter-factual bins. Later on, the bunching should create
+  the notch area where the observed bins are lower than the counter-factual.
+  factual bin  However, both observed and counter-factual histograms should
+  have the same total mass. The end of the notch is determined as the bin
+  where the running sum of differences between observed and counter-factual
+  bins reaches zero. \code{notch_estimator} goes through an iterative
+  process, setting the notch end bin and re-interpolating the counter-factual
+  in the notch area using all the bins outside of the notch, trying to find
+  a stable right-side boundary.
 
-For "impure" notches, where the marginal tax rate after the notch is different
-than the one before it, this function disregards the shifting of post-notch
-distribution to the right, as suggested by Kleven (2016). Assumption is that
-the notch effect is much stronger anyway.
+  A user might want to force a visibly detectable end of notch, rather than
+  let \code{notch_estimator} calculate one. Use \code{force_after=TRUE} with
+  caution: this sets the notch size as \code{exclude_after} minus
+   \code{exclude_before}
+  in terms of bins. The notch size is used to calculate elasticity, and
+  forcing the wrong notch size might bias the intensive margin elasticity
+  estimate. In other settings, e.g. a labor market with extensive margins
+  (entry and exit from labor force), forcing the notch size might be helpful.
 
-Model selection works using the \code{step} function from the stats package.
-It runs backwards from the full polynomial model, trying to find the best
-explanatory model using the Akaike Information Criterion.
+  For "impure" notches, where the marginal tax rate after the notch is
+  different than the one before it, this function disregards the shifting of
+  post-notch distribution to the right, as suggested by Kleven (2016).
+  Assumption is that the notch effect is much stronger anyway.
 
-By default, \code{notch_estimator} will try to find the end of the notch, i.e.
-a histogram bin defining a right-side boundary for a range of an excluded area.
-An interpolation of the counts inside this range renders an equality between
-the sum of the ``excess'' counts, from the left side to the notch point, and
-the sum of ``missing'' counts from the notch point to the notch size.
-\code{notch_estimator} goes through an iterative process to find a stable
-right-side boundary, labels it \emph{notch_size} and returns it. However, the
-user might want to force a visibly detectable end of notch, rather than let
-\code{notch_estimator} calculate one. Use this option with caution: the notch
-size is then used to calculate elasticity. For calculating intensive margin
-elasticities, excess bunching must all come from other bins. Thus, total sums
-must be equal and forcing the notch size might not be appropriate. In other
-settings, e.g. a labor market with extensive margins (entry and exit from
-labor force), forcing the notch size might be helpful.
+  The \code{select} option implements a \code{step} model selection. It runs
+  backwards from the full polynomial model (specified by \code{poly_size}),
+  trying to find the best explanatory polynomial model for counter-factual
+  histogram.
 }
 \examples{
 ability_vec <- 4000 * rbeta(100000, 2, 5)
@@ -124,7 +132,7 @@ draw = FALSE)$e
 }
 \references{
 Kleven, H J (2016). \emph{Bunching}, Annual Review of Economics,
-8(1).
+  8(1).
 }
 \seealso{
 \code{\link{bunch}}, \code{\link{kink_estimator}}

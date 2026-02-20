@@ -1,61 +1,73 @@
 #' Analyzing Bunching at a Notch
 #'
-#' Given a kinked budget set, this function gets a vector of earnings and
+#' Given a notched budget set, this function gets a vector of earnings and
 #' analyzes bunching. This function could be run independently, but best used
 #' through the \code{bunch} function.
 #'
 #' @param earnings Vector of earnings, hopefully a very large one
-#' @param zstar Place of kink (critical earning point)
-#' @param t1 Tax rate before kink
-#' @param t2 Tax rate after kink
-#' @param Tax "Penalty" tax for crossing zstar.
-#' @param cf_start Number of bins before the kink bin where counter-factual
-#' histogram should start.
-#' @param cf_end Number of bins after the kink bin where counter-factual
-#' histogram should start.
-#' @param exclude_before Number of excluded bins before the kink bin.
-#' @param exclude_after Number of excluded bins after the kink bin.
+#' @param zstar Place of notch (critical earning point)
+#' @param t1 Tax rate before notch
+#' @param t2 Tax rate after notch
+#' @param Tax Lump sum penalty for crossing zstar.
+#' @param cf_start Number of bins before the notch bin where counter-factual
+#'   histogram should start.
+#' @param cf_end Number of bins after the notch bin where counter-factual
+#'   histogram should start.
+#' @param exclude_before Number of excluded bins before the notch bin.
+#' @param exclude_after Number of excluded bins after the notch bin.
 #' @param force_after Should \code{bunch} be forced to use of the provided
-#' \emph{exclude_after} for the end of the bunching, rather than trying to find
-#' the bin where the sum of the integral is zero? See details.
+#'   \emph{exclude_after} for the end of the bunching, rather than trying to
+#'   find the bin where the sum of the integral is zero? See details.
 #' @param binw Bin width.
 #' @param poly_size Order of polynomial used to calculate counter-factual
-#'  histogram.
+#'   histogram.
 #' @param convergence Minimal rate of change of bunching estimate to stop
-#' iterations.
+#'   iterations.
 #' @param max_iter Maximum number of iterations for bunching estimates.
 #' @param select Should model selection be used to find counter-factual
-#'  histogram? See details.
+#'   histogram? See details.
 #' @param draw Should a graph be drawn?
 #' @param title Title for plot output
 #' @param varname Name for running variable, to be displayed in the plot
 #'
-#' @details A histogram is created from the earnings vector, with the kink
-#' point zstar as the center of one of the bins.
+#' @details
 #'
-#' For "impure" notches, where the marginal tax rate after the notch is different
-#' than the one before it, this function disregards the shifting of post-notch
-#' distribution to the right, as suggested by Kleven (2016). Assumption is that
-#' the notch effect is much stronger anyway.
+#'   By default, \code{notch_estimator} will try to find the end of the notch,
+#'   i.e. a histogram bin where the incentive to bunch wears off. To do this,
+#'   a counter factual distribution is interpolated using the bins inside the
+#'   counter-factual area but outside of the excluded area. This is assumed to be
+#'   the histogram we would have without the tax at the notch point. At the
+#'   observed bunching area, the bins should be much greater than their
+#'   corresponding counter-factual bins. Later on, the bunching should create
+#'   the notch area where the observed bins are lower than the counter-factual.
+#'   factual bin  However, both observed and counter-factual histograms should
+#'   have the same total mass. The end of the notch is determined as the bin
+#'   where the running sum of differences between observed and counter-factual
+#'   bins reaches zero. \code{notch_estimator} goes through an iterative
+#'   process, setting the notch end bin and re-interpolating the counter-factual
+#'   in the notch area using all the bins outside of the notch, trying to find
+#'   a stable right-side boundary.
 #'
-#' Model selection works using the \code{step} function from the stats package.
-#' It runs backwards from the full polynomial model, trying to find the best
-#' explanatory model using the Akaike Information Criterion.
+#'   A user might want to force a visibly detectable end of notch, rather than
+#'   let \code{notch_estimator} calculate one. Use \code{force_after=TRUE} with
+#'   caution: this sets the notch size as \code{exclude_after} minus
+#'    \code{exclude_before}
+#'   in terms of bins. The notch size is used to calculate elasticity, and
+#'   forcing the wrong notch size might bias the intensive margin elasticity
+#'   estimate. In other settings, e.g. a labor market with extensive margins
+#'   (entry and exit from labor force), forcing the notch size might be helpful.
 #'
-#' By default, \code{notch_estimator} will try to find the end of the notch, i.e.
-#' a histogram bin defining a right-side boundary for a range of an excluded area.
-#' An interpolation of the counts inside this range renders an equality between
-#' the sum of the ``excess'' counts, from the left side to the notch point, and
-#' the sum of ``missing'' counts from the notch point to the notch size.
-#' \code{notch_estimator} goes through an iterative process to find a stable
-#' right-side boundary, labels it \emph{notch_size} and returns it. However, the
-#' user might want to force a visibly detectable end of notch, rather than let
-#' \code{notch_estimator} calculate one. Use this option with caution: the notch
-#' size is then used to calculate elasticity. For calculating intensive margin
-#' elasticities, excess bunching must all come from other bins. Thus, total sums
-#' must be equal and forcing the notch size might not be appropriate. In other
-#' settings, e.g. a labor market with extensive margins (entry and exit from
-#' labor force), forcing the notch size might be helpful.
+#'   For "impure" notches, where the marginal tax rate after the notch is
+#'   different than the one before it, this function disregards the shifting of
+#'   post-notch distribution to the right, as suggested by Kleven (2016).
+#'   Assumption is that the notch effect is much stronger anyway.
+#'
+#'   The \code{select} option implements a \code{step} model selection. It runs
+#'   backwards from the full polynomial model (specified by \code{poly_size}),
+#'   trying to find the best explanatory polynomial model for counter-factual
+#'   histogram.
+#'
+
 #'
 #'
 #'
@@ -72,7 +84,7 @@
 #'
 #'
 #' @references Kleven, H J (2016). \emph{Bunching}, Annual Review of Economics,
-#' 8(1).
+#'   8(1).
 #'
 #' @seealso \code{\link{bunch}}, \code{\link{kink_estimator}}
 #'
@@ -95,7 +107,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
                             max_iter = 100, select = TRUE, draw = TRUE,
                             title = "Bunching Visualization", varname = "Earnings") {
   ## ---------------------------------------------------------------------------
-  ## Error handling
+  ## 1. Error handling
   if (Tax == 0) {                      # this shouldn't happen when using bunch
     warning("Input for notch is zero")
   }
@@ -115,8 +127,9 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
     stop("force_after must be TRUE or FALSE")
   }
 
+  ## 2. Setting up data frames
 
-  # create a histogram for this distribution - make zstar center of a bin
+  # Create a histogram for this distribution - make zstar center of a bin.
   useful_calc <- ceiling( (zstar - min(earnings)) / binw )
   bunch_hist <- graphics::hist(earnings,
                                breaks = seq(
@@ -129,25 +142,23 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
   }
   remove(useful_calc)
 
-
-  # create a data-frame for the analysis
+  # Create a data-frame for the analysis
   reg_data <- as.data.frame(bunch_hist$mids)
   reg_data$counts <- bunch_hist$counts
-  reg_data$cf_counts <- bunch_hist$counts   # cf_counts to be changed late
+  reg_data$cf_counts <- bunch_hist$counts   # cf_counts to be changed later
   colnames(reg_data) <- c("mid","counts","cf_counts")
 
-  # save the bins outside the CF area:
+  # Save the bins outside the CF area:
   saved_data <- reg_data[reg_data$mid < zstar - cf_start * binw |
                            reg_data$mid > zstar + cf_end * binw,]
   saved_data$cf_counts <- NA
   saved_data$excluded <- NA
 
-  # keep only the analysis part, between cf_start and cf_end bins
+  # Keep only the analysis part, between cf_start and cf_end
   reg_data <- reg_data[reg_data$mid >= zstar - cf_start * binw &
                          reg_data$mid <= zstar + cf_end * binw,]
 
-  # need to figure counter factual in the hole.
-  # allow for user input
+  # Set the end of excluded area if not provided by user
   if (is.na(exclude_after)) {
     warning("exclude_after not specified, using 30% of cf_end")
     # calculate the top 30% area before cf_end
@@ -155,33 +166,31 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
     exclude_after <- cf_end - useful_calc
   }
 
-  ## define the bins to exclude (the bunching bins)
-  # create a list of excluded bins (list of bin mids)
+  # Create a list of excluded bins (list of bin mids in excluded area)
   excluded_list <- reg_data$mid[(reg_data$mid >= zstar - exclude_before * binw) &
                                   (reg_data$mid <= zstar + exclude_after * binw)]
-  # add a factor variable to reg_data, indicating excluded bins
-  # all non-excluded bins will be "1".
-  # the excluded bins will start at "2".
+  # Add a factor variable to reg_data, indicating excluded bins
+  # All non-excluded bins will be "1".
+  # Each excluded bin has its own factor, starting with "2"
   reg_data$excluded <- as.numeric(!(reg_data$mid %in% excluded_list))
   for (i in excluded_list) {
     reg_data$excluded[reg_data$mid == i] <- 1 + which(excluded_list == i)
   }
-  # make the "excluded" variable a factor
   reg_data$excluded <- as.factor(reg_data$excluded)
-  # We need a column of all non-excluded for predicting counter-factual
+  # A column, factored all as not excluded, will help with counter-factuals
   cheat_excluded <- data.frame(as.factor(c(rep("1",dim(reg_data)[1]))))
   colnames(cheat_excluded) <- "excluded"
-  # and another one for temporary calculations
+  # Add another column for temporary calculations
   cheat_excluded$temp_excluded <- cheat_excluded$excluded
-  ###
 
-  #### the "naive" regression - using actual earning counts
-  # Create a variable list for regression with polynomial
+  ## 3. "Naive" analysis - a starting point using all the excluded bins.
+  # Create a variable list of polynomials for regression
   vars <- ""
   for (i in 1:poly_size) {
     vars <- paste0(vars," + I(mid^",i,")" )
   }
-  # Run regression for counter-factual
+  # Run the first regression. Each bin in the excluded area has a
+  # dummy variable. The "full" model includes the polynomial bin mids.
   null <- stats::lm(counts ~ excluded, data=reg_data)
   full <- stats::lm(stats::as.formula(paste0("counts ~ excluded",vars)), data=reg_data)
   if (select == TRUE) {
@@ -190,17 +199,19 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
 
   } else {reg_naive <- full}
   remove(null,full)
-
+  # Forecast the first regression without the excluded area bin dummies: all the
+  # bins have a "cheat excluded" factor value of 1 (not excluded). This
+  # creates a forecast of counter-factuals: each bin forecast is the regression
+  # intercept plus the coefficients for the polynomial value of the bin mid.
+  # There are no individual bin effects in the forecast.
   reg_data$cf_counts <- stats::predict(reg_naive,cbind(reg_data[,c(1,3)],cheat_excluded))
 
-  # start variables to run analysis
-  # naive bunching is the sum of coefficients of dummies for bins in excluded
-  # area. Note: eventual sum of total bunching should be zero
-  # until (including) zstar
+  # Sum up all the coefficients for excluded bins (as defined by user)
   naive_B <- sum(reg_naive$coefficients[2:(length(excluded_list) + 1)])
 
-  # initial "guess" for sum bunching uses coefficients from reg_naive, but sums
-  # only until one after zstar. Should be positive
+  # Initialize the variable for total sum of bunching. The initial value is the
+  # sum of coefficients for excluded bins before zstar, zstar itself, and one
+  # after. Here we verify that this sum is positive.
   bunch_sum <- sum(reg_naive$coefficients[2:(2 + exclude_before + 1)])
   if (bunch_sum < 0) {
     stop("Something is wrong: first bin of the hole seems larger than the extra
@@ -213,49 +224,52 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
         3. Shortening the excluded area to the left of the notch")
   }
 
-  # Iterate, updating delta zed until it converges
-  # in the itaration:
-  # 1) summing until the bunching sum is zero, get delta-zed
-  # 2) updating excluded after as midway between delta-zed and former excluded after.
+  ## 4. Adjust notch size (excluded bin list) until total bunching equals zero.
 
-  # start with initial guess: delta zed
+  # Initial guess for delta zed (notch size in bins): exclude_after
   delta_zed <- exclude_after
   new_delta_zed <- 0
   counter <- 1
+
+  # Iterating until delta_zed converges or maximum iterations
   while (abs(new_delta_zed - delta_zed) / delta_zed > convergence &
          counter < max_iter & force_after == FALSE) {
 
+    # No need to update on first iteration. On later iterations,
+    # update delta_zed with the value obtained in the previous run.
     if (counter > 1) {
       delta_zed <- new_delta_zed
       }
 
-    # make tentative excluded bin list.
-    # plus "change" of 10 bins just in case we fall in the hole
+    # Create tentative list of excluded bins. Add 10 more at the end just to
+    # make sure we're not in the hole: the user should have set exclude_after
+    # so we're not in a visible hole.
     temp_excluded_v <- excluded_list[1:(exclude_before + 1 + delta_zed + 10)]
-    # make it a factor variable again
+    # Create a column of temp_excluded bins in reg_data (and make it factors)
     reg_data$temp_excluded <- as.numeric(!reg_data$mid %in% temp_excluded_v)
     for (i in temp_excluded_v[!is.na(temp_excluded_v)]) {
       reg_data$temp_excluded[reg_data$mid == i] <- 1 + which(temp_excluded_v == i)
     }
     reg_data$temp_excluded <- as.factor(reg_data$temp_excluded)
 
-    # run the regression again, with limited excluded bins
+    # Run another regression, with factors for the temporary excluded bins
     null <- stats::lm(counts ~ temp_excluded, data=reg_data)
     full <- stats::lm(stats::as.formula(paste0("counts ~ temp_excluded ",vars)), data = reg_data)
-    # choose to use the full max polynomial or select better
+    # This time we want to start the selection with all the polynomial variables.
     if (select==TRUE) {
       temp_reg <- stats::step(full, scope=list(lower=null, upper=full),
                        direction="backward",trace=0)
 
     } else {temp_reg <- full}
-    # summary(temp_reg)
 
-    # Update counter-factual histogram
+    # Update counter-factual counts in reg data, using the latest regression
     reg_data$cf_counts <- stats::predict(temp_reg,cbind(reg_data[,c(1,3)],cheat_excluded))
-    # Start summing up the differences between CF and actual counts. When you get
-    # to zero, that's delta zed. You could just sum the coefficients for dummies
-    # of excluded bins, but this way delta zed can exten further the excluded bin
-    # limit.
+
+    # The bunching displaces bin counts, but the total counts should be equal
+    # to the counter factual. Start summing up the differences between
+    # actual and counter-factual counts for each bin, starting at the beginning
+    # of the excluded area (before zstar). After passing zstar, once the sum
+    # reaches zero, that's delta zed: the end of the notch.
 
     # create vector of differences:
     diff_vec <-
@@ -263,7 +277,7 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
                         (reg_data$mid <= zstar + exclude_after * binw)] -
       reg_data$cf_counts[(reg_data$mid >= zstar - exclude_before * binw) &
                            (reg_data$mid <= zstar + exclude_after * binw)]
-    # Sum these differences until you reach zero on the right side of notch
+    # Sum these differences until you reach zero on the right side of zstar
     bunch_sum <- diff_vec[1]
     i <- 2
     while( (bunch_sum[i-1] > 0 | i < (exclude_before + 2) ) &
@@ -272,29 +286,30 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
       i <- i+1
     }
 
-    # setting the new delta zed:
+    # Get a new delta zed as a number of bins
     new_delta_zed <- i - 1 - exclude_before - 1
-    counter <- counter+1
+    counter <- counter + 1
   }
 
+  # If the user didn't force an excluded area end, and the notch size (in bins)
+  # still exceeds the end of counter-factual range, raise issue.
   if (force_after==FALSE) {
     if (i >= cf_end) {
       stop("Something is wrong, try extending CF range to the right.")
     }
   }
 
-  # calculating the bunching estimate - for the bunch
+  # Update the total bunching effect sum (on zstar and potentially excluded
+  # before bins)
   ifelse(force_after == FALSE,
          new_B <- sum(sum(temp_reg$coefficients[2:(2 + exclude_before + 1)])),
          new_B <- naive_B)
 
-  # estimated elasticity
+  # Estimated elasticity using the equalizer.
   est_e <- stats::optimize(elas_equalizer, c(0, 5), t1, t2, Tax, zstar,
                     delta_zed, binw)$minimum
 
-  iterations <- counter
-  #
-  # drawing
+  # Plot the histogram with counter-factual.
   if (draw == TRUE) {
     graphics::plot(bunch_hist, freq=TRUE,ylim=c(0,1.1 *
                             stats::quantile(bunch_hist$counts, probs = c(0.99))),
@@ -315,15 +330,15 @@ notch_estimator <- function(earnings, zstar, t1, t2, Tax = 0,
                                         ))
   }
 
-  # creating the complete histogram data to be returned
+  # Create the complete histogram data frame to return. Add the saved data
+  # outside the analysis area.
   return_data <- saved_data[saved_data$mid < zstar - cf_start * binw, ]
   return_data <- rbind(return_data, reg_data[,c(1:4)])
   return_data <- rbind(return_data,
                        saved_data[saved_data$mid > zstar + cf_start * binw, ])
 
-  results=list("e" = est_e,                           # estimate for elasticity
-               "Bn" = new_B,               # estimate of sum extra bunching from
-                                          # start of excluding area to notch bin
+  results=list("e" = est_e,             # Estimate for elasticity
+               "Bn" = new_B,            # Estimate of sum extra bunching
                "notch_size" = new_delta_zed * binw,
                "data" = return_data)
 
